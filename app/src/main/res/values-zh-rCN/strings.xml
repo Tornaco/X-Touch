@@ -63,5 +63,8 @@
     <string name="open_source">应用源代码</string>
     <string name="title_email">Email</string>
     <string name="release">Releases</string>
-    <string name="message_help">Please add this app to no-kill white list in yr secure manager</string>
+    <string name="message_help">请把该应用加到安全管家白名单，保证后台不被杀死。</string>
+    <string name="noop">无</string>
+    <string name="title_swipe_down">下滑</string>
+    <string name="title_swipe_up">上滑</string>
 </resources>

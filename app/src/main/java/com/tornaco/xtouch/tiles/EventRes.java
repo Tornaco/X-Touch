@@ -36,7 +36,7 @@ public class EventRes {
             case GlobalActionExt.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN:
                 return R.string.action_spli_screen;
         }
-        return R.string.app_name;
+        return R.string.noop;
     }
 
     public static

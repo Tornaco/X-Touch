@@ -208,6 +208,8 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
             case GlobalActionExt.GLOBAL_ACTION_LOCK_SCREEN:
                 mDevicePolicyManager.lockNow();
                 break;
+            case BYPASS:
+                break;
             default:
                 performGlobalAction(action);
                 break;

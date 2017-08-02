@@ -13,8 +13,10 @@ import com.tornaco.xtouch.tiles.LockScreenPermTile;
 import com.tornaco.xtouch.tiles.RotateTile;
 import com.tornaco.xtouch.tiles.SingleTapEventTile;
 import com.tornaco.xtouch.tiles.SoundTile;
+import com.tornaco.xtouch.tiles.SwipeDownEventTile;
 import com.tornaco.xtouch.tiles.SwipeLeftEventTile;
 import com.tornaco.xtouch.tiles.SwipeRightEventTile;
+import com.tornaco.xtouch.tiles.SwipeUpEventTile;
 import com.tornaco.xtouch.tiles.TapDelayTile;
 import com.tornaco.xtouch.tiles.ToggleSwitchTile;
 import com.tornaco.xtouch.tiles.VibrateTile;
@@ -61,6 +63,8 @@ public class Dashboard extends DashboardFragment {
         key.addTile(new DoubleTapEventTile(getContext()));
         key.addTile(new SwipeLeftEventTile(getContext()));
         key.addTile(new SwipeRightEventTile(getContext()));
+        key.addTile(new SwipeUpEventTile(getContext()));
+        key.addTile(new SwipeDownEventTile(getContext()));
 
         categories.add(def);
         categories.add(settings);

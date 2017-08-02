@@ -65,4 +65,7 @@
     <string name="title_email">Email</string>
     <string name="release">Releases</string>
     <string name="message_help">Please add this app to no-kill white list in yr secure manager</string>
+    <string name="noop">BYPASS</string>
+    <string name="title_swipe_down">Swipe down</string>
+    <string name="title_swipe_up">Swipe up</string>
 </resources>

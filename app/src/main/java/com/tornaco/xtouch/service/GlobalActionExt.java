@@ -12,6 +12,7 @@ public interface GlobalActionExt {
     int GLOBAL_ACTION_RECENTS = 3;
     int GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN = 7;
     int GLOBAL_ACTION_LOCK_SCREEN = 8;
+    int BYPASS = -1;
 
     int[][] ALL = {
             {0, GLOBAL_ACTION_BACK},
@@ -21,6 +22,7 @@ public interface GlobalActionExt {
             {4, GLOBAL_ACTION_RECENTS},
             {5, GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN},
             {6, GLOBAL_ACTION_LOCK_SCREEN},
+            {7, BYPASS},
 
     };
 
