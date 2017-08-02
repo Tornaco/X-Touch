@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_enabled">启用</string>
+    <string name="title_need_access_service_enabled">辅助功能</string>
+    <string name="summary_need_access_service_enabled">请接下来打开本应用的辅助功能</string>
+    <string name="summary_need_access_service_disbaled">请接下来关闭本应用的辅助功能</string>
+    <string name="title_edge">边缘吸附</string>
+    <string name="category_status">状态</string>
+    <string name="category_settings">配置</string>
+    <string name="title_heart_beat">呼吸</string>
+    <string name="title_rotate">旋转</string>
+    <string name="category_view">视觉</string>
+    <string name="title_alpha">透明度</string>
+    <string name="category_key">按键</string>
+    <string name="title_single_tap">单击</string>
+    <string name="action_back">返回</string>
+    <string name="action_home">主页</string>
+    <string name="action_recent">最近任务</string>
+    <string name="action_notification">通知</string>
+    <string name="title_double_tap">双击</string>
+    <string name="title_swipe_left">左滑</string>
+    <string name="title_swipe_right">右滑</string>
+    <string name="title_need_drawable_overlay">窗口绘制</string>
+    <string name="summary_need_drawable_overlay">接下来请开启本应用的窗口绘制权限</string>
+    <string name="action_lock_screen">锁屏</string>
+    <string name="action_quick_settings">快速设置</string>
+    <string name="action_spli_screen">分屏（N+）</string>
+    <string name="title_lock_perm">设备管理器</string>
+    <string name="summary_lock_perm">锁屏功能需要你激活设备管理员权限</string>
+    <string name="title_turn_off_admin">你只能去设置手动关闭设备管理员</string>
+    <string name="title_sound">音效</string>
+    <string name="title_vibrate">震动</string>
+    <string name="title_tap_delay">单双击检测延迟</string>
+    <string name="title_image">图片</string>
+    <string name="summary_def">默认</string>
+    <string name="summary_custom">自定义</string>
+    <string name="title_ime_reposition">输入法避让</string>
+    <string name="title_perm_require">权限</string>
+    <string name="summary_perm_require">我们需要你授予最基本的权限</string>
+    <string name="help">帮助</string>
+    <string name="donate">自助捐赠</string>
+    <string name="shop_list">感谢名单</string>
+    <string name="title_about">关于</string>
+    <string name="title_buy">自助捐赠</string>
+    <string name="title_ad_area">广告区域</string>
+    <string name="summary_buy_intro">如果你喜欢我们的作品，为了鼓励我们更好的开发，请自行点击下方链接查看二维码，自主捐赠本应用，金额请随意。我们不会强制你购买或者强制显示广告，你也可以在不购买的情况下使用。
+        \n\n请在支付时加上你的昵称信息，以及你要发布的一些随意的说明文字，不可超过30字。
+        \n\n点击"我已经捐赠"可以关闭模拟广告。</string>
+    <string name="title_alipay">支付宝</string>
+    <string name="title_wechat">微信</string>
+    <string name="done">完成</string>
+    <string name="save_qr_code">保存二维码</string>
+    <string name="save_by_screenshot">请截图保存</string>
+    <string name="title_pay_ment_type">支付方式</string>
+    <string name="title_pay_list">感谢名单</string>
+    <string name="title_thanks">贡献人员</string>
+    <string name="title_pay_status_paid">我已经捐赠</string>
+    <string name="tornaco">Tornaco</string>
+    <string name="tornaco_intro">Android framework developer in China.Beijing, worked ever on ROM porting, Telephony, Audio, AppOps, PMS etc. App development is just for fun.</string>
+    <string name="title_version">应用版本号</string>
+    <string name="me">开发者</string>
+    <string name="app">应用</string>
+    <string name="open_source">应用源代码</string>
+    <string name="title_email">Email</string>
+    <string name="release">Releases</string>
+    <string name="message_help">Please add this app to no-kill white list in yr secure manager</string>
+</resources>

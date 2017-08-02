@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pay_list_url">https://raw.githubusercontent.com/Tornaco/Tor-Data/master/pay_list_screec_rec_plus</string>
+</resources>

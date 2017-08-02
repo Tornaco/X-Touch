@@ -1,0 +1,71 @@
+package com.tornaco.xtouch.app;
+
+import com.tornaco.xtouch.R;
+import com.tornaco.xtouch.provider.SettingsProvider;
+import com.tornaco.xtouch.tiles.AdTile;
+import com.tornaco.xtouch.tiles.AlphaTile;
+import com.tornaco.xtouch.tiles.DoubleTapEventTile;
+import com.tornaco.xtouch.tiles.EdgeTile;
+import com.tornaco.xtouch.tiles.HeartbeatTile;
+import com.tornaco.xtouch.tiles.IMETile;
+import com.tornaco.xtouch.tiles.ImageTile;
+import com.tornaco.xtouch.tiles.LockScreenPermTile;
+import com.tornaco.xtouch.tiles.RotateTile;
+import com.tornaco.xtouch.tiles.SingleTapEventTile;
+import com.tornaco.xtouch.tiles.SoundTile;
+import com.tornaco.xtouch.tiles.SwipeLeftEventTile;
+import com.tornaco.xtouch.tiles.SwipeRightEventTile;
+import com.tornaco.xtouch.tiles.TapDelayTile;
+import com.tornaco.xtouch.tiles.ToggleSwitchTile;
+import com.tornaco.xtouch.tiles.VibrateTile;
+
+import java.util.List;
+
+import dev.nick.tiles.tile.Category;
+import dev.nick.tiles.tile.DashboardFragment;
+
+public class Dashboard extends DashboardFragment {
+    @Override
+    protected void onCreateDashCategories(List<Category> categories) {
+        super.onCreateDashCategories(categories);
+        Category def = new Category();
+        def.titleRes = R.string.category_status;
+        def.addTile(new ToggleSwitchTile(getActivity()));
+        def.addTile(new LockScreenPermTile(getActivity()));
+
+
+        Category settings = new Category();
+        settings.titleRes = R.string.category_settings;
+        settings.addTile(new EdgeTile(getContext()));
+        settings.addTile(new SoundTile(getContext()));
+        settings.addTile(new VibrateTile(getContext()));
+        settings.addTile(new TapDelayTile(getContext()));
+        settings.addTile(new IMETile(getContext()));
+
+        Category ad = new Category();
+        if (!SettingsProvider.get().getBoolean(SettingsProvider.Key.PAID)) {
+            ad.titleRes = R.string.title_ad_area;
+            ad.addTile(new AdTile(getContext()));
+        }
+
+        Category anim = new Category();
+        anim.titleRes = R.string.category_view;
+        anim.addTile(new HeartbeatTile(getContext()));
+        anim.addTile(new RotateTile(getContext()));
+        anim.addTile(new AlphaTile(getContext()));
+        anim.addTile(new ImageTile(getActivity()));
+
+        Category key = new Category();
+        key.titleRes = R.string.category_key;
+        key.addTile(new SingleTapEventTile(getContext()));
+        key.addTile(new DoubleTapEventTile(getContext()));
+        key.addTile(new SwipeLeftEventTile(getContext()));
+        key.addTile(new SwipeRightEventTile(getContext()));
+
+        categories.add(def);
+        categories.add(settings);
+        categories.add(ad);
+        categories.add(anim);
+        categories.add(key);
+    }
+}
