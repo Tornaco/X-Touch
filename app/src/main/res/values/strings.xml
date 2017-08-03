@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">XTouch</string>
+    <string name="app_name">X Touch</string>
     <string name="intro">Intro</string>
     <string name="title_enabled">Enabled</string>
     <string name="title_need_access_service_enabled">Accessibility service</string>
@@ -68,4 +68,8 @@
     <string name="noop">BYPASS</string>
     <string name="title_swipe_down">Swipe down</string>
     <string name="title_swipe_up">Swipe up</string>
+    <string name="title_long_press_delay">Long press timeout</string>
+    <string name="title_size">Size</string>
+    <string name="title_restore_on_ime_hidden">Restore position</string>
+    <string name="summary_restore_on_ime_hidden">Restore position on IME hidden</string>
 </resources>

@@ -10,7 +10,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.view.GestureDetectorCompat;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -26,6 +25,7 @@ import android.widget.ImageView;
 
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.provider.SettingsProvider;
+import com.tornaco.xtouch.service.GestureDetectorCompat;
 
 import org.newstand.logger.Logger;
 
@@ -40,6 +40,7 @@ public class FloatView extends FrameLayout {
     private WindowManager.LayoutParams mLp = new WindowManager.LayoutParams();
 
     private int mTouchSlop, mSwipeSlop;
+    private int mSize;
     private int mTapDelay;
     private float density = getResources().getDisplayMetrics().density;
 
@@ -51,6 +52,8 @@ public class FloatView extends FrameLayout {
 
     private View mContainerView;
     private ImageView mImageView;
+
+    private boolean mScreenOff;
 
     private Handler mHandler = new Handler();
 
@@ -66,6 +69,14 @@ public class FloatView extends FrameLayout {
         public void update(Observable observable, Object o) {
             if (o == SettingsProvider.Key.EDGE) {
                 mEdgeEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.EDGE);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mEdgeEnabled) {
+                            reposition();
+                        }
+                    }
+                });
             }
             if (o == SettingsProvider.Key.ALPHA) {
                 mAlpha = (float) SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA) / (float) 100;
@@ -105,6 +116,16 @@ public class FloatView extends FrameLayout {
                 });
             }
 
+            if (o == SettingsProvider.Key.SIZE) {
+                mSize = SettingsProvider.get().getInt(SettingsProvider.Key.SIZE);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onPostSizeChange();
+                    }
+                });
+            }
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -113,6 +134,24 @@ public class FloatView extends FrameLayout {
             });
         }
     };
+
+    private void onPostSizeChange() {
+        mLp.width = dp2px(mSize);
+        mLp.height = dp2px(mSize);
+        mWm.updateViewLayout(this, mLp);
+    }
+
+    @Override
+    public void onScreenStateChanged(int screenState) {
+        super.onScreenStateChanged(screenState);
+        if (screenState == SCREEN_STATE_OFF) {
+            cleanAnim();
+            mScreenOff = true;
+        } else {
+            mScreenOff = false;
+            applyAnim();
+        }
+    }
 
     private void dump() {
         Logger.i(toString());
@@ -123,7 +162,9 @@ public class FloatView extends FrameLayout {
         return "FloatView{" +
                 "mTouchSlop=" + mTouchSlop +
                 ", mSwipeSlop=" + mSwipeSlop +
-                ", mEdgeEnabled=" + mEdgeEnabled +
+                ", mSize=" + mSize +
+                ", mTapDelay=" + mTapDelay +
+                ", density=" + density +
                 ", mRotate=" + mRotate +
                 ", mHeartBeat=" + mHeartBeat +
                 ", mAlpha=" + mAlpha +
@@ -141,6 +182,7 @@ public class FloatView extends FrameLayout {
         mHeartBeat = SettingsProvider.get().getBoolean(SettingsProvider.Key.HEART_BEAT);
         mAlpha = (float) SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA) / (float) 100;
         mTapDelay = SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY);
+        mSize = SettingsProvider.get().getInt(SettingsProvider.Key.SIZE);
         SettingsProvider.get().addObserver(o);
 
         mCallback = (Callback) context;
@@ -164,6 +206,7 @@ public class FloatView extends FrameLayout {
             public void onLongPress(MotionEvent e) {
                 inDragMode = true;
                 super.onLongPress(e);
+                mCallback.onLongPress();
             }
 
             @Override
@@ -228,8 +271,8 @@ public class FloatView extends FrameLayout {
         mWm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         mLp.gravity = Gravity.START | Gravity.TOP;
         mLp.format = PixelFormat.RGBA_8888;
-        mLp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        mLp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLp.width = dp2px(mSize);
+        mLp.height = dp2px(mSize);
         mLp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         mLp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
 
@@ -248,7 +291,6 @@ public class FloatView extends FrameLayout {
                         startX = event.getRawX();
                         startY = event.getRawY();
                         isDragging = false;
-                        inDragMode = false;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (inDragMode) {
@@ -324,8 +366,8 @@ public class FloatView extends FrameLayout {
 
     private void startAlphaBreathAnimation() {
         final ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mContainerView, "alpha", 0.3f, 1f);
-        alphaAnimator.setDuration(3000);
-        alphaAnimator.setInterpolator(new BraethInterpolator());
+        alphaAnimator.setDuration(5000);
+        alphaAnimator.setInterpolator(new BreathInterpolator());
         alphaAnimator.setRepeatCount(ValueAnimator.INFINITE);
         alphaAnimator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -345,7 +387,7 @@ public class FloatView extends FrameLayout {
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-                if (!mHeartBeat) {
+                if (!mHeartBeat || mScreenOff) {
                     alphaAnimator.cancel();
                 }
             }
@@ -385,12 +427,27 @@ public class FloatView extends FrameLayout {
         mWm.updateViewLayout(this, mLp);
     }
 
-    public void repositionInIme(int screenHeight, int mIMEHeight) {
-        mWm.updateViewLayout(this, mLp);
-        if (screenHeight - mLp.y <= mIMEHeight) {
-            Logger.i("Reposition within IME");
-            mLp.y -= (mIMEHeight - (screenHeight - mLp.y) + density * 48);
+    private int previousX, previousY;
+    private boolean needRestoreOnImeHidden;
+
+    public void restoreXYOnImeHiddenIfNeed() {
+        if (needRestoreOnImeHidden) {
+            Logger.i("restoreXYOnImeHidden to: %s, %s", previousX, previousY);
+            mLp.x = previousX;
+            mLp.y = previousY;
             mWm.updateViewLayout(this, mLp);
+            needRestoreOnImeHidden = false;
+        }
+    }
+
+    public void repositionInIme(int screenHeight, int mIMEHeight) {
+        if (screenHeight - mLp.y <= mIMEHeight) {
+            previousX = mLp.x;
+            previousY = mLp.y;
+            Logger.i("Reposition within IME");
+            mLp.y -= (mIMEHeight - (screenHeight - mLp.y) + density * 48 * 2 /*Nav and candidate*/);
+            mWm.updateViewLayout(this, mLp);
+            needRestoreOnImeHidden = true;
         }
     }
 
@@ -404,9 +461,11 @@ public class FloatView extends FrameLayout {
         void onDoubleTap();
 
         void onSwipeDirection(@NonNull SwipeDirection direction);
+
+        void onLongPress();
     }
 
-    public class BraethInterpolator implements TimeInterpolator {
+    public class BreathInterpolator implements TimeInterpolator {
         @Override
         public float getInterpolation(float input) {
 

@@ -16,12 +16,12 @@ import dev.nick.tiles.tile.QuickTile;
  * Email: Tornaco@163.com
  */
 
-public class TapDelayTile extends QuickTile {
-    public TapDelayTile(final Context context) {
+public class SizeTile extends QuickTile {
+    public SizeTile(final Context context) {
         super(context);
-        this.titleRes = R.string.title_tap_delay;
-        this.iconRes = R.drawable.ic_timer_black_24dp;
-        this.summary = String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY));
+        this.titleRes = R.string.title_size;
+        this.iconRes = R.drawable.ic_adjust_black_24dp;
+        this.summary = String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.SIZE));
 
         this.tileView = new EditTextTileView(context) {
             @Override
@@ -31,12 +31,12 @@ public class TapDelayTile extends QuickTile {
 
             @Override
             protected CharSequence getHint() {
-                return String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY));
+                return String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.SIZE));
             }
 
             @Override
             protected CharSequence getDialogTitle() {
-                return context.getString(R.string.title_tap_delay);
+                return context.getString(R.string.title_size);
             }
 
             protected CharSequence getPositiveButton() {
@@ -59,12 +59,12 @@ public class TapDelayTile extends QuickTile {
                         return;
                     }
 
-                    SettingsProvider.get().putInt(SettingsProvider.Key.TAP_DELAY, rate);
+                    SettingsProvider.get().putInt(SettingsProvider.Key.SIZE, rate);
                 } catch (Throwable e) {
                     Toast.makeText(context, Log.getStackTraceString(e), Toast.LENGTH_LONG).show();
                 }
 
-                getSummaryTextView().setText(String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY)));
+                getSummaryTextView().setText(String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.SIZE)));
             }
         };
     }

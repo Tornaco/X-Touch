@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<people xmlns:animal="www.anim.com"
+    xmlns:people="www.hello.com">
+    <!--hello  world-->
+    <people:eyes>two</people:eyes>
+    <mouse>one</mouse>
+    <animal:hands people:count="2">
+        <fingers count="5" />
+    </animal:hands>
+
+    <![CDATA[
+    public class People {
+        public static void main(String[] arg) {
+          System.out.println("hello world");
+          }
+        }
+    ]]>
+</people>

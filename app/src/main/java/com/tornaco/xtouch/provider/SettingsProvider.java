@@ -2,6 +2,7 @@ package com.tornaco.xtouch.provider;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.ViewConfiguration;
 
 import com.tornaco.xtouch.service.GlobalActionExt;
 
@@ -21,14 +22,17 @@ public class SettingsProvider extends Observable {
     public enum Key {
         PAID(false),
         ALPHA(100),
+        SIZE(52),
         EDGE(false),
         SOUND(true),
         VIRBATE(true),
         HEART_BEAT(false),
         ROTATE(false),
+        RESTORE_IME_HIDDEN(true),
         CUSTOM_IMAGE(null),
         SWIPE_SLOT(50),
         TAP_DELAY(200),
+        LONG_PRESS_TIMEOUT(ViewConfiguration.getLongPressTimeout()),
         SINGLE_TAP_ACTION(GlobalActionExt.GLOBAL_ACTION_BACK),
         DOUBLE_TAP_ACTION(GlobalActionExt.GLOBAL_ACTION_HOME),
         SWIPE_UP_ACTION(GlobalActionExt.GLOBAL_ACTION_RECENTS),

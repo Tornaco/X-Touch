@@ -37,7 +37,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     private FloatView mFloatView;
 
     private int actionSingleTap, actionDoubleTap, actionSwipeUp, actionSwipeDown, actionSwipeLeft, actionSwipeRight;
-    private boolean vibrate, sound, mImeReposition;
+    private boolean vibrate, sound, mImeReposition, mRestoreIMEHidden;
 
     private SoundPool mSoundPool;
     private int mStartSound;
@@ -47,6 +47,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     private int mIMEHeight, mScreenHeight;
 
     private Handler h = new Handler();
+    private PackageObserver packageObserver;
 
     private void readSettings() {
         actionSingleTap = SettingsProvider.get().getInt(SettingsProvider.Key.SINGLE_TAP_ACTION);
@@ -59,6 +60,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         sound = SettingsProvider.get().getBoolean(SettingsProvider.Key.SOUND);
         vibrate = SettingsProvider.get().getBoolean(SettingsProvider.Key.VIRBATE);
         mImeReposition = SettingsProvider.get().getBoolean(SettingsProvider.Key.IME_REPOSITION);
+        mRestoreIMEHidden = SettingsProvider.get().getBoolean(SettingsProvider.Key.RESTORE_IME_HIDDEN);
 
         dump();
     }
@@ -128,6 +130,9 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         }
 
         SettingsProvider.get().putBoolean(SettingsProvider.Key.ENABLED, true);
+
+        packageObserver = new PackageObserver();
+        packageObserver.register(this);
     }
 
     @Override
@@ -142,9 +147,11 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
             String pkgName = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : "";
             String clz = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : "";
             Logger.i("TYPE_WINDOW_STATE_CHANGED: %s, %s", pkgName, clz);
-            if (ImePackageProvider.isIME(pkgName) && clz.contains("inputmethodservice")) {
+            if (ImePackageProvider.isIME(pkgName)) {
                 Logger.i("We are in IME");
                 mFloatView.repositionInIme(mScreenHeight, mIMEHeight);
+            } else if (mRestoreIMEHidden) {
+                mFloatView.restoreXYOnImeHiddenIfNeed();
             }
         }
     }
@@ -182,6 +189,12 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         perform(actionDoubleTap);
     }
 
+
+    @Override
+    public void onLongPress() {
+        if (vibrate) mVibrator.vibrate(30);
+    }
+
     @Override
     public void onSwipeDirection(@NonNull FloatView.SwipeDirection direction) {
         Logger.i("onSwipeDirection: %s", direction);
@@ -214,11 +227,13 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                 performGlobalAction(action);
                 break;
         }
-        if (sound) {
-            mSoundPool.play(mStartSound, 1.0f, 1.0f, 0, 0, 1.0f);
-        }
-        if (vibrate) {
-            mVibrator.vibrate(30);
+        if (action != BYPASS) {
+            if (sound) {
+                mSoundPool.play(mStartSound, 1.0f, 1.0f, 0, 0, 1.0f);
+            }
+            if (vibrate) {
+                mVibrator.vibrate(30);
+            }
         }
     }
 
@@ -231,8 +246,13 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         }
     }
 
-    public static boolean activated(Context context) {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        packageObserver.unRegister(this);
+    }
 
+    public static boolean activated(Context context) {
         for (AccessibilityServiceInfo id : ((AccessibilityManager)
                 context.getSystemService(ACCESSIBILITY_SERVICE))
                 .getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)) {

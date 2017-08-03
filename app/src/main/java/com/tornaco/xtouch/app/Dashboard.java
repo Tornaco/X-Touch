@@ -1,5 +1,6 @@
 package com.tornaco.xtouch.app;
 
+import com.tornaco.xtouch.BuildConfig;
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.provider.SettingsProvider;
 import com.tornaco.xtouch.tiles.AdTile;
@@ -10,8 +11,11 @@ import com.tornaco.xtouch.tiles.HeartbeatTile;
 import com.tornaco.xtouch.tiles.IMETile;
 import com.tornaco.xtouch.tiles.ImageTile;
 import com.tornaco.xtouch.tiles.LockScreenPermTile;
+import com.tornaco.xtouch.tiles.LongPressDelayTile;
+import com.tornaco.xtouch.tiles.RestoreImeHiddenTile;
 import com.tornaco.xtouch.tiles.RotateTile;
 import com.tornaco.xtouch.tiles.SingleTapEventTile;
+import com.tornaco.xtouch.tiles.SizeTile;
 import com.tornaco.xtouch.tiles.SoundTile;
 import com.tornaco.xtouch.tiles.SwipeDownEventTile;
 import com.tornaco.xtouch.tiles.SwipeLeftEventTile;
@@ -42,16 +46,19 @@ public class Dashboard extends DashboardFragment {
         settings.addTile(new SoundTile(getContext()));
         settings.addTile(new VibrateTile(getContext()));
         settings.addTile(new TapDelayTile(getContext()));
+        settings.addTile(new LongPressDelayTile(getContext()));
         settings.addTile(new IMETile(getContext()));
+        settings.addTile(new RestoreImeHiddenTile(getContext()));
 
         Category ad = new Category();
-        if (!SettingsProvider.get().getBoolean(SettingsProvider.Key.PAID)) {
+        if (!BuildConfig.DEBUG && !SettingsProvider.get().getBoolean(SettingsProvider.Key.PAID)) {
             ad.titleRes = R.string.title_ad_area;
             ad.addTile(new AdTile(getContext()));
         }
 
         Category anim = new Category();
         anim.titleRes = R.string.category_view;
+        anim.addTile(new SizeTile(getContext()));
         anim.addTile(new HeartbeatTile(getContext()));
         anim.addTile(new RotateTile(getContext()));
         anim.addTile(new AlphaTile(getContext()));

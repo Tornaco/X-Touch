@@ -52,6 +52,15 @@ public class ImePackageProvider {
         }
     }
 
+    public static void scanPackage(Context context, String pkgName) {
+        if (!IMES.contains(pkgName)) {
+            if (isInputMethodApp(context, pkgName)) {
+                IMES.add(pkgName);
+                Logger.i("Adding IME: %s", pkgName);
+            }
+        }
+    }
+
     public static boolean isInputMethodApp(Context context, String strPkgName) {
 
         PackageManager pkm = context.getPackageManager();

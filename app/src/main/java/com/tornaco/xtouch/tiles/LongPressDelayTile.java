@@ -16,12 +16,12 @@ import dev.nick.tiles.tile.QuickTile;
  * Email: Tornaco@163.com
  */
 
-public class TapDelayTile extends QuickTile {
-    public TapDelayTile(final Context context) {
+public class LongPressDelayTile extends QuickTile {
+    public LongPressDelayTile(final Context context) {
         super(context);
-        this.titleRes = R.string.title_tap_delay;
+        this.titleRes = R.string.title_long_press_delay;
         this.iconRes = R.drawable.ic_timer_black_24dp;
-        this.summary = String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY));
+        this.summary = String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.LONG_PRESS_TIMEOUT));
 
         this.tileView = new EditTextTileView(context) {
             @Override
@@ -31,12 +31,7 @@ public class TapDelayTile extends QuickTile {
 
             @Override
             protected CharSequence getHint() {
-                return String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY));
-            }
-
-            @Override
-            protected CharSequence getDialogTitle() {
-                return context.getString(R.string.title_tap_delay);
+                return String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.LONG_PRESS_TIMEOUT));
             }
 
             protected CharSequence getPositiveButton() {
@@ -45,6 +40,11 @@ public class TapDelayTile extends QuickTile {
 
             protected CharSequence getNegativeButton() {
                 return context.getString(android.R.string.cancel);
+            }
+
+            @Override
+            protected CharSequence getDialogTitle() {
+                return context.getString(R.string.title_long_press_delay);
             }
 
             @Override
@@ -59,12 +59,12 @@ public class TapDelayTile extends QuickTile {
                         return;
                     }
 
-                    SettingsProvider.get().putInt(SettingsProvider.Key.TAP_DELAY, rate);
+                    SettingsProvider.get().putInt(SettingsProvider.Key.LONG_PRESS_TIMEOUT, rate);
                 } catch (Throwable e) {
                     Toast.makeText(context, Log.getStackTraceString(e), Toast.LENGTH_LONG).show();
                 }
 
-                getSummaryTextView().setText(String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY)));
+                getSummaryTextView().setText(String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.LONG_PRESS_TIMEOUT)));
             }
         };
     }

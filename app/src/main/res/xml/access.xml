@@ -4,5 +4,5 @@
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags=""
     android:canRetrieveWindowContent="false"
-    android:description="@string/intro"
+    android:description="@string/app_name"
     android:notificationTimeout="100" />

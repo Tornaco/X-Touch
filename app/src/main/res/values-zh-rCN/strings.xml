@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">X Touch</string>
     <string name="title_enabled">启用</string>
     <string name="title_need_access_service_enabled">辅助功能</string>
     <string name="summary_need_access_service_enabled">请接下来打开本应用的辅助功能</string>
@@ -67,4 +68,8 @@
     <string name="noop">无</string>
     <string name="title_swipe_down">下滑</string>
     <string name="title_swipe_up">上滑</string>
+    <string name="title_long_press_delay">长按检测延时</string>
+    <string name="title_size">球的大小</string>
+    <string name="title_restore_on_ime_hidden">位置恢复（实验）</string>
+    <string name="summary_restore_on_ime_hidden">当IME隐藏时，恢复原来的位置</string>
 </resources>
