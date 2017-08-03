@@ -20,3 +20,16 @@ notifications:
     - tornaco@163.com
     on_success: always
     on_failure: always
+before_install:
+- openssl aes-256-cbc -K $encrypted_6060c2f38d8c_key -iv $encrypted_6060c2f38d8c_iv
+  -in keys_android2.jks.enc -out keys/keys_android2.jks -d
+deploy:
+  provider: releases
+  api_key:
+    secure: X8D2wYnqrDlJDuOOQUbylEiy1+Z8OZV1SjjrtNLiCktRLH2hIJvhuDww3hfIMc7XMaOIaFV4Fnq5skDOatH8ifogEJqUNyjbqRU1A6CD/Vh8bcJAGdNdWtwXar2DTK50bnInSut7HZ/b0iqQUQoi2rBz8cWOhgX333Ese2FVz6NLz6qbqegG8hUL2+qCBPJqnt5d5Slj5+DFVE/75Cr77oofI/DaQyTWItzm5jMnlU3ZZvzN4aLEYTEx018O0HdpLNKtwiSo9LW/T/F14REJJN3bcm3xC3fdAaHZLBGjMavLAva3HlWwcTFiN/DOB9fidYjRvizYrVBpOqvJ/Jnoe8h6y3HIJUjKMQcqdu0LTjuevi0V/LGV+gSpUwPECdAyjZOOoL3TL15toe/gxSRj2zAaTguj3Qhr1v8ymRaKrxvt3pCLj5aTesibAN9pWWW23EcHLQRg99G/tuuAfQsHbA+zlEPKsgMQGNduCu9qHvXIeAs+3oICyjiPGjFCg95lfz3/bcLWHkxzbZFeognFZ00W8YTMMYJzoTjjy5PUlMsyxeXOx72RhJ4au0S7iOMFhI4ebWObkiKkLi+zc0xIeJeCGecVVfu13qtXxHE7no84WjfkU/vulrgz8kPcEv97hu2HQ05eVkgAT/abtnPzwL89YESNYZYmSlDvt+EBoRA=
+  file: app/build/outputs/apk/app-release.apk
+  skip_cleanup: true
+  on:
+    repo: Tornaco/X-Touch
+    tags: true
+    all_branches: true
