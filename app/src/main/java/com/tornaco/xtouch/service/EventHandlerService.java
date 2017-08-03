@@ -138,7 +138,6 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        mFloatView.detach();
     }
 
     @Override
@@ -153,6 +152,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
             } else if (mRestoreIMEHidden) {
                 mFloatView.restoreXYOnImeHiddenIfNeed();
             }
+            Logger.i("attached: %s", mFloatView.isAttachedToWindow());
         }
     }
 
@@ -164,9 +164,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
     @Override
     public void onInterrupt() {
-        Logger.i("onServiceConnected");
-        mFloatView.detach();
-        SettingsProvider.get().putBoolean(SettingsProvider.Key.ENABLED, false);
+        Logger.i("onInterrupt");
     }
 
     @Override
@@ -241,6 +239,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (mOrientation != newConfig.orientation) {
+            mFloatView.refreshRect();
             mFloatView.reposition();
             mOrientation = newConfig.orientation;
         }

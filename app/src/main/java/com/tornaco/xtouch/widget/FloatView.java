@@ -400,6 +400,7 @@ public class FloatView extends FrameLayout {
     }
 
     public void detach() {
+        Logger.i("detach, current is attached?: %s", isAttachedToWindow());
         try {
             mWm.removeViewImmediate(this);
         } catch (Exception ignored) {
@@ -413,6 +414,10 @@ public class FloatView extends FrameLayout {
 
     private int dp2px(int dp) {
         return (int) (dp * density);
+    }
+
+    public void refreshRect(){
+        getWindowVisibleDisplayFrame(mRect);
     }
 
     public void reposition() {
