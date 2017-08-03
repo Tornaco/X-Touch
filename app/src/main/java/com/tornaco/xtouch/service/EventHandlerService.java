@@ -235,8 +235,8 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         switch (action) {
             case GlobalActionExt.GLOBAL_ACTION_LOCK_SCREEN:
                 if (mRootEnabled) {
-                    InputManagerCompat.lock();
-                } else {
+                    ScreenLockerRoot.lock();
+                } else if (AdminReceiver.isActivated(getApplicationContext())) {
                     mDevicePolicyManager.lockNow();
                 }
                 break;
