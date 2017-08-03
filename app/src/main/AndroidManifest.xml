@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".app.MainActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +31,7 @@
 
         <activity
             android:name=".app.ContainerHostActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
