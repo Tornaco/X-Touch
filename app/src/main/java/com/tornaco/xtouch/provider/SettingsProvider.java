@@ -21,6 +21,7 @@ public class SettingsProvider extends Observable {
 
     public enum Key {
         PAID(false),
+        ROOT(false),
         ALPHA(100),
         SIZE(52),
         EDGE(false),
@@ -28,6 +29,7 @@ public class SettingsProvider extends Observable {
         VIRBATE(true),
         HEART_BEAT(false),
         ROTATE(false),
+        FEEDBACK_ANIM(true),
         RESTORE_IME_HIDDEN(true),
         CUSTOM_IMAGE(null),
         SWIPE_SLOT(50),

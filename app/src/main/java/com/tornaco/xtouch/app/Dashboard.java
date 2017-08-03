@@ -13,6 +13,7 @@ import com.tornaco.xtouch.tiles.ImageTile;
 import com.tornaco.xtouch.tiles.LockScreenPermTile;
 import com.tornaco.xtouch.tiles.LongPressDelayTile;
 import com.tornaco.xtouch.tiles.RestoreImeHiddenTile;
+import com.tornaco.xtouch.tiles.RootTile;
 import com.tornaco.xtouch.tiles.RotateTile;
 import com.tornaco.xtouch.tiles.SingleTapEventTile;
 import com.tornaco.xtouch.tiles.SizeTile;
@@ -22,6 +23,7 @@ import com.tornaco.xtouch.tiles.SwipeLeftEventTile;
 import com.tornaco.xtouch.tiles.SwipeRightEventTile;
 import com.tornaco.xtouch.tiles.SwipeUpEventTile;
 import com.tornaco.xtouch.tiles.TapDelayTile;
+import com.tornaco.xtouch.tiles.TapFeedbackTile;
 import com.tornaco.xtouch.tiles.ToggleSwitchTile;
 import com.tornaco.xtouch.tiles.VibrateTile;
 
@@ -38,7 +40,6 @@ public class Dashboard extends DashboardFragment {
         def.titleRes = R.string.category_status;
         def.addTile(new ToggleSwitchTile(getActivity()));
         def.addTile(new LockScreenPermTile(getActivity()));
-
 
         Category settings = new Category();
         settings.titleRes = R.string.category_settings;
@@ -59,6 +60,7 @@ public class Dashboard extends DashboardFragment {
         Category anim = new Category();
         anim.titleRes = R.string.category_view;
         anim.addTile(new SizeTile(getContext()));
+        anim.addTile(new TapFeedbackTile(getContext()));
         anim.addTile(new HeartbeatTile(getContext()));
         anim.addTile(new RotateTile(getContext()));
         anim.addTile(new AlphaTile(getContext()));
@@ -73,10 +75,15 @@ public class Dashboard extends DashboardFragment {
         key.addTile(new SwipeUpEventTile(getContext()));
         key.addTile(new SwipeDownEventTile(getContext()));
 
+        Category dev = new Category();
+        dev.titleRes = R.string.summary_exp;
+        dev.addTile(new RootTile(getActivity()));
+
         categories.add(def);
         categories.add(settings);
         categories.add(ad);
         categories.add(anim);
         categories.add(key);
+        categories.add(dev);
     }
 }

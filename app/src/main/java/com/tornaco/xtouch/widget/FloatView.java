@@ -1,6 +1,8 @@
 package com.tornaco.xtouch.widget;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
@@ -20,6 +22,7 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -44,7 +47,7 @@ public class FloatView extends FrameLayout {
     private int mTapDelay;
     private float density = getResources().getDisplayMetrics().density;
 
-    private boolean mEdgeEnabled, mRotate, mHeartBeat;
+    private boolean mDoubleTapEnabled, mEdgeEnabled, mRotate, mHeartBeat, mFeedbackAnimEnabled;
     private float mAlpha;
 
     private GestureDetectorCompat mDetectorCompat;
@@ -61,6 +64,7 @@ public class FloatView extends FrameLayout {
         @Override
         public void run() {
             mCallback.onSingleTap();
+            performTapFeedbackIfNeed();
         }
     };
 
@@ -126,6 +130,10 @@ public class FloatView extends FrameLayout {
                 });
             }
 
+            if (o == SettingsProvider.Key.FEEDBACK_ANIM) {
+                mFeedbackAnimEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.FEEDBACK_ANIM);
+            }
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -139,6 +147,10 @@ public class FloatView extends FrameLayout {
         mLp.width = dp2px(mSize);
         mLp.height = dp2px(mSize);
         mWm.updateViewLayout(this, mLp);
+    }
+
+    public void setDoubleTapEnabled(boolean doubleTapEnabled) {
+        this.mDoubleTapEnabled = doubleTapEnabled;
     }
 
     @Override
@@ -183,6 +195,8 @@ public class FloatView extends FrameLayout {
         mAlpha = (float) SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA) / (float) 100;
         mTapDelay = SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY);
         mSize = SettingsProvider.get().getInt(SettingsProvider.Key.SIZE);
+        mFeedbackAnimEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.FEEDBACK_ANIM);
+
         SettingsProvider.get().addObserver(o);
 
         mCallback = (Callback) context;
@@ -192,13 +206,18 @@ public class FloatView extends FrameLayout {
             public boolean onDoubleTap(MotionEvent e) {
                 mHandler.removeCallbacks(mSingleTapNotifier);
                 mCallback.onDoubleTap();
+                performTapFeedbackIfNeed();
                 return true;
             }
 
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-                mHandler.removeCallbacks(mSingleTapNotifier);
-                mHandler.postDelayed(mSingleTapNotifier, mTapDelay);
+                if (mDoubleTapEnabled) {
+                    mHandler.removeCallbacks(mSingleTapNotifier);
+                    mHandler.postDelayed(mSingleTapNotifier, mTapDelay);
+                } else {
+                    mSingleTapNotifier.run();
+                }
                 return true;
             }
 
@@ -207,6 +226,7 @@ public class FloatView extends FrameLayout {
                 inDragMode = true;
                 super.onLongPress(e);
                 mCallback.onLongPress();
+                performTapFeedbackIfNeed();
             }
 
             @Override
@@ -237,6 +257,7 @@ public class FloatView extends FrameLayout {
 
                 if (swipeDirection != null) {
                     mCallback.onSwipeDirection(swipeDirection);
+                    performTapFeedbackIfNeed();
                 }
 
                 return true;
@@ -364,29 +385,39 @@ public class FloatView extends FrameLayout {
         }
     }
 
+    private void performTapFeedbackIfNeed() {
+        if (!mFeedbackAnimEnabled) return;
+        AnimatorSet set = new AnimatorSet();
+        final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 1f, 0.8f);
+        final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 1f, 0.8f);
+        set.setDuration(150);
+        set.setInterpolator(new LinearInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                AnimatorSet set = new AnimatorSet();
+                final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 0.8f, 1f);
+                final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 0.8f, 1f);
+                set.setDuration(150);
+                set.setInterpolator(new LinearInterpolator());
+                set.playTogether(alphaAnimatorX, alphaAnimatorY);
+                set.start();
+            }
+        });
+        set.playTogether(alphaAnimatorX, alphaAnimatorY);
+        set.start();
+    }
+
     private void startAlphaBreathAnimation() {
         final ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mContainerView, "alpha", 0.3f, 1f);
         alphaAnimator.setDuration(5000);
         alphaAnimator.setInterpolator(new BreathInterpolator());
         alphaAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        alphaAnimator.addListener(new Animator.AnimatorListener() {
+        alphaAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
+            public void onAnimationRepeat(Animator animation) {
+                super.onAnimationRepeat(animation);
                 if (!mHeartBeat || mScreenOff) {
                     alphaAnimator.cancel();
                 }
@@ -416,7 +447,7 @@ public class FloatView extends FrameLayout {
         return (int) (dp * density);
     }
 
-    public void refreshRect(){
+    public void refreshRect() {
         getWindowVisibleDisplayFrame(mRect);
     }
 
@@ -470,7 +501,7 @@ public class FloatView extends FrameLayout {
         void onLongPress();
     }
 
-    public class BreathInterpolator implements TimeInterpolator {
+    private class BreathInterpolator implements TimeInterpolator {
         @Override
         public float getInterpolation(float input) {
 

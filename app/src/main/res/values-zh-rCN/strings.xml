@@ -72,4 +72,8 @@
     <string name="title_size">球的大小</string>
     <string name="title_restore_on_ime_hidden">位置恢复（实验）</string>
     <string name="summary_restore_on_ime_hidden">当IME隐藏时，恢复原来的位置</string>
+    <string name="title_root_enabled">Root模式</string>
+    <string name="summary_root_enabled">尝试使用Root shell命令锁定屏幕或者清理内存</string>
+    <string name="summary_exp">实验</string>
+    <string name="title_tap_feedback">触摸效果</string>
 </resources>

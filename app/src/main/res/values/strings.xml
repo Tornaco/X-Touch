@@ -72,4 +72,8 @@
     <string name="title_size">Size</string>
     <string name="title_restore_on_ime_hidden">Restore position</string>
     <string name="summary_restore_on_ime_hidden">Restore position on IME hidden</string>
+    <string name="title_root_enabled">Root mode</string>
+    <string name="summary_root_enabled">Using Root to lock screen and kill apps</string>
+    <string name="summary_exp">Experimental</string>
+    <string name="title_tap_feedback">Tap feedback anim</string>
 </resources>

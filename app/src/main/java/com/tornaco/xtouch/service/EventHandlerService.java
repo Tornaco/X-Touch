@@ -6,22 +6,29 @@ import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.hardware.input.InputManager;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.view.InputEvent;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 
+import com.chrisplus.rootmanager.RootManager;
 import com.tornaco.xtouch.R;
+import com.tornaco.xtouch.common.ReflectionUtils;
 import com.tornaco.xtouch.provider.ImePackageProvider;
 import com.tornaco.xtouch.provider.SettingsProvider;
 import com.tornaco.xtouch.widget.FloatView;
 
 import org.newstand.logger.Logger;
 
+import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -37,7 +44,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     private FloatView mFloatView;
 
     private int actionSingleTap, actionDoubleTap, actionSwipeUp, actionSwipeDown, actionSwipeLeft, actionSwipeRight;
-    private boolean vibrate, sound, mImeReposition, mRestoreIMEHidden;
+    private boolean vibrate, sound, mImeReposition, mRestoreIMEHidden, mRootEnabled;
 
     private SoundPool mSoundPool;
     private int mStartSound;
@@ -61,6 +68,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         vibrate = SettingsProvider.get().getBoolean(SettingsProvider.Key.VIRBATE);
         mImeReposition = SettingsProvider.get().getBoolean(SettingsProvider.Key.IME_REPOSITION);
         mRestoreIMEHidden = SettingsProvider.get().getBoolean(SettingsProvider.Key.RESTORE_IME_HIDDEN);
+        mRootEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.ROOT);
 
         dump();
     }
@@ -101,15 +109,24 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                     @Override
                     public void run() {
                         readSettings();
+
+                        // Now we should update FlowView policy.
+                        if (mFloatView != null) {
+                            mFloatView.setDoubleTapEnabled(actionDoubleTap != BYPASS);
+                        }
                     }
                 });
             }
         });
 
+        // This happen before FloatView init.
         readSettings();
 
         mOrientation = getResources().getConfiguration().orientation;
+
         mFloatView = new FloatView(this);
+        mFloatView.setDoubleTapEnabled(actionDoubleTap != BYPASS);
+
         mDevicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
@@ -217,7 +234,11 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         Logger.i("perform: %s", action);
         switch (action) {
             case GlobalActionExt.GLOBAL_ACTION_LOCK_SCREEN:
-                mDevicePolicyManager.lockNow();
+                if (mRootEnabled) {
+                    InputManagerCompat.lock();
+                } else {
+                    mDevicePolicyManager.lockNow();
+                }
                 break;
             case BYPASS:
                 break;
@@ -249,6 +270,29 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     public void onDestroy() {
         super.onDestroy();
         packageObserver.unRegister(this);
+    }
+
+    // FIXME Missing permission.
+    private static class InputManagerCompat {
+
+        static void lock() {
+            InputManager manager;
+            Method mGet = ReflectionUtils.findMethod(InputManager.class, "getInstance");
+            mGet.setAccessible(true);
+            manager = (InputManager) ReflectionUtils.invokeMethod(mGet, null);
+            Logger.i("InputManager instance:%s", manager);
+            Method mInject = ReflectionUtils.findMethod(InputManager.class, "injectInputEvent", InputEvent.class, int.class);
+            mInject.setAccessible(true);
+            final long eventTime = SystemClock.uptimeMillis();
+            ReflectionUtils.invokeMethod(mInject, manager, new KeyEvent(eventTime - 50, eventTime - 50, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_POWER, 0), 0);
+            ReflectionUtils.invokeMethod(mInject, manager, new KeyEvent(eventTime - 50, eventTime - 50, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_POWER, 0), 0);
+        }
+    }
+
+    public static class ScreenLockerRoot {
+        static void lock() {
+            RootManager.getInstance().runCommand("input keyevent 26");
+        }
     }
 
     public static boolean activated(Context context) {
