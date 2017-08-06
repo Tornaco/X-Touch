@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tornaco.xtouch">
 
-
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -18,9 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".app.MainActivity"
-            android:excludeFromRecents="true"
+            android:enabled="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +30,25 @@
         </activity>
 
         <activity
-            android:name=".app.ContainerHostActivity"
+            android:name=".app.MainActivityNoRecents"
+            android:theme="@style/AppTheme.NoActionBar"
             android:excludeFromRecents="true"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".app.ContainerHostActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".app.ContainerHostActivityNoRecents"
+            android:excludeFromRecents="true"
+            android:enabled="false"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver

@@ -22,6 +22,8 @@ public class SettingsProvider extends Observable {
     public enum Key {
         PAID(false),
         ROOT(false),
+        NO_RECENTS(false),
+        SWITCH_APP_WITH_N_FEATURE(true),
         ALPHA(100),
         SIZE(52),
         EDGE(false),

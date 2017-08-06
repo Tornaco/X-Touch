@@ -1,8 +1,15 @@
 package com.tornaco.xtouch.app;
 
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.pm.PackageManager;
 
 import com.tornaco.xtouch.provider.SettingsProvider;
+
+import org.newstand.logger.Logger;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by guohao4 on 2017/8/2.
@@ -14,5 +21,56 @@ public class XTouchApp extends Application {
     public void onCreate() {
         super.onCreate();
         SettingsProvider.init(this);
+
+        SettingsProvider.get().addObserver(new Observer() {
+            @Override
+            public void update(Observable observable, Object o) {
+                if (o == SettingsProvider.Key.NO_RECENTS) {
+                    boolean noRecent = SettingsProvider.get().getBoolean(SettingsProvider.Key.NO_RECENTS);
+
+                    String[] clzToDisable, clzToEnable;
+
+                    if (!noRecent) {
+                        clzToDisable = new String[]{
+                                MainActivityNoRecents.class.getName(),
+                                ContainerHostActivityNoRecents.class.getName(),
+
+                        };
+                        clzToEnable = new String[]{
+                                MainActivity.class.getName(),
+                                ContainerHostActivity.class.getName(),
+                        };
+                    } else {
+                        clzToDisable = new String[]{
+                                MainActivity.class.getName(),
+                                ContainerHostActivity.class.getName(),
+                        };
+                        clzToEnable = new String[]{
+                                MainActivityNoRecents.class.getName(),
+                                ContainerHostActivityNoRecents.class.getName(),
+
+                        };
+                    }
+
+                    PackageManager pm = getPackageManager();
+
+                    for (String clz : clzToEnable) {
+                        Logger.i("Enabling: %s", clz);
+                        ComponentName componentName = new ComponentName(getPackageName(), clz);
+                        pm.setComponentEnabledSetting(componentName,
+                                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                                PackageManager.DONT_KILL_APP);
+                    }
+
+                    for (String clz : clzToDisable) {
+                        Logger.i("Disabling: %s", clz);
+                        ComponentName componentName = new ComponentName(getPackageName(), clz);
+                        pm.setComponentEnabledSetting(componentName,
+                                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                                PackageManager.DONT_KILL_APP);
+                    }
+                }
+            }
+        });
     }
 }

@@ -38,7 +38,12 @@ public class MainActivity extends ContainerHostActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.shop) {
-            startActivity(ContainerHostActivity.getIntent(this, ShopFragment.class));
+            boolean noRecent = SettingsProvider.get().getBoolean(SettingsProvider.Key.NO_RECENTS);
+            if (noRecent) {
+                startActivity(ContainerHostActivityNoRecents.getIntent(this, ShopFragment.class));
+            } else {
+                startActivity(ContainerHostActivity.getIntent(this, ShopFragment.class));
+            }
         }
         if (item.getItemId() == R.id.help) {
             new AlertDialog.Builder(MainActivity.this)

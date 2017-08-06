@@ -12,6 +12,8 @@ import com.tornaco.xtouch.tiles.IMETile;
 import com.tornaco.xtouch.tiles.ImageTile;
 import com.tornaco.xtouch.tiles.LockScreenPermTile;
 import com.tornaco.xtouch.tiles.LongPressDelayTile;
+import com.tornaco.xtouch.tiles.NSwitchAppTile;
+import com.tornaco.xtouch.tiles.NoRecentsTile;
 import com.tornaco.xtouch.tiles.RestoreImeHiddenTile;
 import com.tornaco.xtouch.tiles.RootTile;
 import com.tornaco.xtouch.tiles.RotateTile;
@@ -78,6 +80,8 @@ public class Dashboard extends DashboardFragment {
         Category dev = new Category();
         dev.titleRes = R.string.summary_exp;
         dev.addTile(new RootTile(getActivity()));
+        dev.addTile(new NoRecentsTile(getActivity()));
+        dev.addTile(new NSwitchAppTile(getActivity()));
 
         categories.add(def);
         categories.add(settings);

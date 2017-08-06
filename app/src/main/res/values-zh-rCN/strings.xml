@@ -44,9 +44,7 @@
     <string name="title_about">关于</string>
     <string name="title_buy">自助捐赠</string>
     <string name="title_ad_area">广告区域</string>
-    <string name="summary_buy_intro">如果你喜欢我们的作品，为了鼓励我们更好的开发，请自行点击下方链接查看二维码，自主捐赠本应用，金额请随意。我们不会强制你购买或者强制显示广告，你也可以在不购买的情况下使用。
-        \n\n请在支付时加上你的昵称信息，以及你要发布的一些随意的说明文字，不可超过30字。
-        \n\n点击"我已经捐赠"可以关闭模拟广告。</string>
+    <string name="summary_buy_intro">PROJECT STOPPED</string>
     <string name="title_alipay">支付宝</string>
     <string name="title_wechat">微信</string>
     <string name="done">完成</string>
@@ -57,7 +55,6 @@
     <string name="title_thanks">贡献人员</string>
     <string name="title_pay_status_paid">我已经捐赠</string>
     <string name="tornaco">Tornaco</string>
-    <string name="tornaco_intro">Android framework developer in China.Beijing, worked ever on ROM porting, Telephony, Audio, AppOps, PMS etc. App development is just for fun.</string>
     <string name="title_version">应用版本号</string>
     <string name="me">开发者</string>
     <string name="app">应用</string>
@@ -76,4 +73,14 @@
     <string name="summary_root_enabled">尝试使用Root shell命令锁定屏幕或者清理内存</string>
     <string name="summary_exp">实验</string>
     <string name="title_tap_feedback">触摸效果</string>
+    <string name="action_power_dialog">关机菜单</string>
+    <string name="action_hide">隐藏悬浮窗</string>
+    <string name="action_kill_current">结束当前应用</string>
+    <string name="action_switch_app">切换应用</string>
+    <string name="action_mem_opt">内存优化</string>
+    <string name="title_no_recents">最近任务中隐藏</string>
+    <string name="message_wait_app_to_restart">请等待系统重新启用本应用</string>
+    <string name="title_n_switch">使用N-R2方式切换应用</string>
+    <string name="title_hidden">Float view is hidden</string>
+    <string name="title_restore">Restore</string>
 </resources>

@@ -35,6 +35,16 @@ public class EventRes {
                 return R.string.action_quick_settings;
             case GlobalActionExt.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN:
                 return R.string.action_spli_screen;
+            case GlobalActionExt.GLOBAL_ACTION_POWER_DIALOG:
+                return R.string.action_power_dialog;
+            case GlobalActionExt.GLOBAL_ACTION_HIDE:
+                return R.string.action_hide;
+            case GlobalActionExt.GLOBAL_ACTION_KILL_CURRENT_APP:
+                return R.string.action_kill_current;
+            case GlobalActionExt.GLOBAL_ACTION_SWITCH_APP:
+                return R.string.action_switch_app;
+            case GlobalActionExt.GLOBAL_MEM_OPT:
+                return R.string.action_mem_opt;
         }
         return R.string.noop;
     }

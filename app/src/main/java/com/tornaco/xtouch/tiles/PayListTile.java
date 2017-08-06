@@ -5,7 +5,9 @@ import android.view.View;
 
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.app.ContainerHostActivity;
+import com.tornaco.xtouch.app.ContainerHostActivityNoRecents;
 import com.tornaco.xtouch.app.PayListBrowserFragment;
+import com.tornaco.xtouch.provider.SettingsProvider;
 
 import dev.nick.tiles.tile.QuickTile;
 import dev.nick.tiles.tile.QuickTileView;
@@ -27,7 +29,12 @@ public class PayListTile extends QuickTile {
             @Override
             public void onClick(View v) {
                 super.onClick(v);
-                context.startActivity(ContainerHostActivity.getIntent(context, PayListBrowserFragment.class));
+                boolean noRecent = SettingsProvider.get().getBoolean(SettingsProvider.Key.NO_RECENTS);
+                if (noRecent) {
+                    context.startActivity(ContainerHostActivityNoRecents.getIntent(context, PayListBrowserFragment.class));
+                } else {
+                    context.startActivity(ContainerHostActivity.getIntent(context, PayListBrowserFragment.class));
+                }
             }
         };
 

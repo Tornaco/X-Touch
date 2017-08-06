@@ -2,9 +2,13 @@ package com.tornaco.xtouch.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.hardware.input.InputManager;
 import android.media.AudioAttributes;
@@ -13,6 +17,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -37,6 +42,7 @@ import ezy.assist.compat.SettingsCompat;
 public class EventHandlerService extends AccessibilityService implements FloatView.Callback, GlobalActionExt {
 
     private static final float IME_WINDOW_SIZE_SC = 2.7785f;
+    private static final String ACTION_RESTORE = "action.restore";
 
     private DevicePolicyManager mDevicePolicyManager;
     private Vibrator mVibrator;
@@ -53,8 +59,18 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
     private int mIMEHeight, mScreenHeight;
 
-    private Handler h = new Handler();
-    private PackageObserver packageObserver;
+    private Handler H = new Handler();
+
+    private PackageObserver mPackageObserver;
+    private BroadcastReceiver mActionReceiver;
+
+    private AppSwitcher mAppSwitcher;
+
+    private AccessibilityEventListener mOnAccessibilityEventListener;
+
+    public void setOnAccessibilityEventListener(AccessibilityEventListener listener) {
+        this.mOnAccessibilityEventListener = listener;
+    }
 
     private void readSettings() {
         actionSingleTap = SettingsProvider.get().getInt(SettingsProvider.Key.SINGLE_TAP_ACTION);
@@ -100,12 +116,15 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         Logger.i("Screen height:%s, imr height:%s", mScreenHeight, mIMEHeight);
 
         ImePackageProvider.initAsync(this);
+        LauncherPackageProvider.initAsync(this);
+
+        mAppSwitcher = new AppSwitcherCompat(this);
 
         SettingsProvider.init(this);
         SettingsProvider.get().addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object o) {
-                h.post(new Runnable() {
+                H.post(new Runnable() {
                     @Override
                     public void run() {
                         readSettings();
@@ -119,7 +138,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
             }
         });
 
-        // This happen before FloatView init.
+        // This happen before FloatView initAsync.
         readSettings();
 
         mOrientation = getResources().getConfiguration().orientation;
@@ -148,8 +167,21 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
         SettingsProvider.get().putBoolean(SettingsProvider.Key.ENABLED, true);
 
-        packageObserver = new PackageObserver();
-        packageObserver.register(this);
+        mPackageObserver = new PackageObserver();
+        mPackageObserver.register(this);
+
+        mActionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (ACTION_RESTORE.equals(intent.getAction())) {
+                    Logger.i("Restore action received.");
+                    mFloatView.show();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(ACTION_RESTORE);
+        registerReceiver(mActionReceiver, filter);
     }
 
     @Override
@@ -157,19 +189,24 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         super.onTaskRemoved(rootIntent);
     }
 
+    public interface AccessibilityEventListener {
+        void onAccessibilityEvent(AccessibilityEvent accessibilityEvent);
+    }
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
+        if (mOnAccessibilityEventListener != null)
+            mOnAccessibilityEventListener.onAccessibilityEvent(accessibilityEvent);
         if (mImeReposition && accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             String pkgName = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : "";
             String clz = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : "";
-            Logger.i("TYPE_WINDOW_STATE_CHANGED: %s, %s", pkgName, clz);
+            Logger.i("ES: onAccessibilityEvent: %s, %s", pkgName, clz);
             if (ImePackageProvider.isIME(pkgName)) {
                 Logger.i("We are in IME");
                 mFloatView.repositionInIme(mScreenHeight, mIMEHeight);
             } else if (mRestoreIMEHidden) {
                 mFloatView.restoreXYOnImeHiddenIfNeed();
             }
-            Logger.i("attached: %s", mFloatView.isAttachedToWindow());
         }
     }
 
@@ -240,6 +277,16 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                     mDevicePolicyManager.lockNow();
                 }
                 break;
+            case GLOBAL_ACTION_SWITCH_APP:
+                mAppSwitcher.switchApp(this);
+                break;
+            case GLOBAL_ACTION_KILL_CURRENT_APP:
+                mAppSwitcher.killCurrent();
+                break;
+            case GLOBAL_ACTION_HIDE:
+                buildNotification();
+                mFloatView.hide();
+                break;
             case BYPASS:
                 break;
             default:
@@ -267,9 +314,38 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (ACTION_RESTORE.equals(intent.getAction())) {
+            mFloatView.show();
+        }
+
+        return START_STICKY;
+    }
+
+    private void buildNotification() {
+        NotificationManagerCompat.from(getApplicationContext()).cancel(0);
+        NotificationManagerCompat.from(getApplicationContext())
+                .notify(0, createNotificationBuilder().build());
+    }
+
+
+    private Notification.Builder createNotificationBuilder() {
+        Notification.Builder builder = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.ic_stat_app)
+                .setContentTitle(getString(R.string.title_hidden));
+        Intent restoreIntent = new Intent(ACTION_RESTORE);
+        restoreIntent.setClass(this, EventHandlerService.class);
+        builder.setContentIntent(PendingIntent.getBroadcast(this, 0, restoreIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        return builder;
+    }
+
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        packageObserver.unRegister(this);
+        mPackageObserver.unRegister(this);
+        unregisterReceiver(mActionReceiver);
     }
 
     // FIXME Missing permission.

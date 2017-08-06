@@ -390,7 +390,7 @@ public class FloatView extends FrameLayout {
         AnimatorSet set = new AnimatorSet();
         final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 1f, 0.8f);
         final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 1f, 0.8f);
-        set.setDuration(150);
+        set.setDuration(120);
         set.setInterpolator(new LinearInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -399,7 +399,7 @@ public class FloatView extends FrameLayout {
                 AnimatorSet set = new AnimatorSet();
                 final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 0.8f, 1f);
                 final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 0.8f, 1f);
-                set.setDuration(150);
+                set.setDuration(120);
                 set.setInterpolator(new LinearInterpolator());
                 set.playTogether(alphaAnimatorX, alphaAnimatorY);
                 set.start();
@@ -411,7 +411,7 @@ public class FloatView extends FrameLayout {
 
     private void startAlphaBreathAnimation() {
         final ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mContainerView, "alpha", 0.3f, 1f);
-        alphaAnimator.setDuration(5000);
+        alphaAnimator.setDuration(6000);
         alphaAnimator.setInterpolator(new BreathInterpolator());
         alphaAnimator.setRepeatCount(ValueAnimator.INFINITE);
         alphaAnimator.addListener(new AnimatorListenerAdapter() {
@@ -439,6 +439,40 @@ public class FloatView extends FrameLayout {
         } finally {
             SettingsProvider.get().deleteObserver(o);
         }
+    }
+
+    public boolean isShowing() {
+        return mContainerView.getVisibility() == VISIBLE;
+    }
+
+    public void hide() {
+        if (!isShowing()) return;
+        AnimatorSet set = new AnimatorSet();
+        final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 1f, 0f);
+        final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 1f, 0f);
+        set.setDuration(150);
+        set.setInterpolator(new LinearInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mContainerView.setVisibility(INVISIBLE);
+            }
+        });
+        set.playTogether(alphaAnimatorX, alphaAnimatorY);
+        set.start();
+    }
+
+    public void show() {
+        if (isShowing()) return;
+        mContainerView.setVisibility(INVISIBLE);
+        AnimatorSet set = new AnimatorSet();
+        final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 0f, 1f);
+        final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 0f, 1f);
+        set.setDuration(150);
+        set.setInterpolator(new LinearInterpolator());
+        set.playTogether(alphaAnimatorX, alphaAnimatorY);
+        set.start();
     }
 
     private boolean isDragging, inDragMode;

@@ -57,7 +57,6 @@
     <string name="title_thanks">Thank</string>
     <string name="title_pay_status_paid">I have paid</string>
     <string name="tornaco">Tornaco</string>
-    <string name="tornaco_intro">Android framework developer, works with Telephony, Audio, AppOps, PMS etc. App development is just for fun.</string>
     <string name="title_version">App version</string>
     <string name="me">Me</string>
     <string name="app">App</string>
@@ -76,4 +75,14 @@
     <string name="summary_root_enabled">Using Root to lock screen and kill apps</string>
     <string name="summary_exp">Experimental</string>
     <string name="title_tap_feedback">Tap feedback anim</string>
+    <string name="action_power_dialog">Power dialog</string>
+    <string name="action_hide">Hide float view</string>
+    <string name="action_kill_current">Kill current app</string>
+    <string name="action_switch_app">Switch app</string>
+    <string name="action_mem_opt">Memory opt</string>
+    <string name="title_no_recents">No recents</string>
+    <string name="message_wait_app_to_restart">Wait System to re-enable components</string>
+    <string name="title_n_switch">Switch app with N feature</string>
+    <string name="title_hidden">Float view is hidden</string>
+    <string name="title_restore">Restore</string>
 </resources>

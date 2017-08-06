@@ -61,6 +61,10 @@ public class ImePackageProvider {
         }
     }
 
+    public static boolean isInputMethodApp(String strPkgName) {
+        return IMES.contains(strPkgName);
+    }
+
     public static boolean isInputMethodApp(Context context, String strPkgName) {
 
         PackageManager pkm = context.getPackageManager();
