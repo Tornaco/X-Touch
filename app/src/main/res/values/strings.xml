@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">X Touch</string>
+    <string name="app_name">X-Touch</string>
     <string name="intro">Intro</string>
-    <string name="title_enabled">Enabled</string>
+    <string name="title_enabled">Enable X-Touch</string>
     <string name="title_need_access_service_enabled">Accessibility service</string>
     <string name="summary_need_access_service_enabled">Please turn on Accessibility service for this app</string>
     <string name="summary_need_access_service_disbaled">Please turn off Accessibility for this app</string>
@@ -25,7 +25,7 @@
     <string name="summary_need_drawable_overlay">We need draw overlay permission to continue</string>
     <string name="action_lock_screen">Lock screen</string>
     <string name="action_quick_settings">Quick settings</string>
-    <string name="action_spli_screen">Split screen</string>
+    <string name="action_spli_screen">Split screen(N+)</string>
     <string name="title_lock_perm">Device admin</string>
     <string name="summary_lock_perm">Device admin should be activated before we send lock screen key event</string>
     <string name="title_turn_off_admin">Please turn off admin manually</string>
@@ -64,7 +64,7 @@
     <string name="title_email">Email</string>
     <string name="release">Releases</string>
     <string name="message_help">Please add this app to no-kill white list in yr secure manager</string>
-    <string name="noop">BYPASS</string>
+    <string name="noop">None</string>
     <string name="title_swipe_down">Swipe down</string>
     <string name="title_swipe_up">Swipe up</string>
     <string name="title_long_press_delay">Long press timeout</string>
@@ -72,17 +72,17 @@
     <string name="title_restore_on_ime_hidden">Restore position</string>
     <string name="summary_restore_on_ime_hidden">Restore position on IME hidden</string>
     <string name="title_root_enabled">Root mode</string>
-    <string name="summary_root_enabled">Using Root to lock screen and kill apps</string>
+    <string name="summary_root_enabled">Using Root for more features</string>
     <string name="summary_exp">Experimental</string>
     <string name="title_tap_feedback">Tap feedback anim</string>
     <string name="action_power_dialog">Power dialog</string>
     <string name="action_hide">Hide float view</string>
-    <string name="action_kill_current">Kill current app</string>
+    <string name="action_kill_current">Kill current app(Root)</string>
     <string name="action_switch_app">Switch app</string>
-    <string name="action_mem_opt">Memory opt</string>
+    <string name="action_mem_opt">Memory opt(Root)</string>
     <string name="title_no_recents">No recents</string>
     <string name="message_wait_app_to_restart">Wait System to re-enable components</string>
     <string name="title_n_switch">Switch app with N feature</string>
-    <string name="title_hidden">Float view is hidden</string>
+    <string name="title_hidden">Float view is hidden, tap to show again</string>
     <string name="title_restore">Restore</string>
 </resources>

@@ -3,6 +3,8 @@ package com.tornaco.xtouch.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import com.tornaco.xtouch.BuildConfig;
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.provider.SettingsProvider;
+import com.tornaco.xtouch.service.EventHandlerService;
 import com.tornaco.xtouch.tiles.ImageTile;
 import com.tornaco.xtouch.util.BitmapUtil;
 
@@ -25,6 +28,15 @@ public class MainActivity extends ContainerHostActivity {
     @Override
     protected void showHomeAsUp() {
         // Hooked.
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Send broadcast to show float view.
+        Intent intent = new Intent(EventHandlerService.ACTION_RESTORE);
+        sendBroadcast(intent);
     }
 
     @Override

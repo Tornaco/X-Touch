@@ -42,7 +42,8 @@ import ezy.assist.compat.SettingsCompat;
 public class EventHandlerService extends AccessibilityService implements FloatView.Callback, GlobalActionExt {
 
     private static final float IME_WINDOW_SIZE_SC = 2.7785f;
-    private static final String ACTION_RESTORE = "action.restore";
+    public static final String ACTION_RESTORE = "action.restore";
+    private static final int NOTIFICATION_RESTORE_ID = 0x1;
 
     private DevicePolicyManager mDevicePolicyManager;
     private Vibrator mVibrator;
@@ -176,6 +177,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                 if (ACTION_RESTORE.equals(intent.getAction())) {
                     Logger.i("Restore action received.");
                     mFloatView.show();
+                    NotificationManagerCompat.from(getApplicationContext()).cancel(NOTIFICATION_RESTORE_ID);
                 }
             }
         };
@@ -318,15 +320,17 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
         if (ACTION_RESTORE.equals(intent.getAction())) {
             mFloatView.show();
+            NotificationManagerCompat.from(getApplicationContext()).cancel(NOTIFICATION_RESTORE_ID);
         }
 
         return START_STICKY;
     }
 
     private void buildNotification() {
-        NotificationManagerCompat.from(getApplicationContext()).cancel(0);
+        NotificationManagerCompat.from(getApplicationContext()).cancel(NOTIFICATION_RESTORE_ID);
         NotificationManagerCompat.from(getApplicationContext())
-                .notify(0, createNotificationBuilder().build());
+                .notify(NOTIFICATION_RESTORE_ID,
+                        createNotificationBuilder().build());
     }
 
 
@@ -335,7 +339,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                 .setSmallIcon(R.drawable.ic_stat_app)
                 .setContentTitle(getString(R.string.title_hidden));
         Intent restoreIntent = new Intent(ACTION_RESTORE);
-        restoreIntent.setClass(this, EventHandlerService.class);
+        builder.setOngoing(true);
         builder.setContentIntent(PendingIntent.getBroadcast(this, 0, restoreIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         return builder;
     }

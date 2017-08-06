@@ -464,8 +464,9 @@ public class FloatView extends FrameLayout {
     }
 
     public void show() {
+        Logger.i("Show: isShowing: %s", isDragging);
         if (isShowing()) return;
-        mContainerView.setVisibility(INVISIBLE);
+        mContainerView.setVisibility(VISIBLE);
         AnimatorSet set = new AnimatorSet();
         final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 0f, 1f);
         final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 0f, 1f);

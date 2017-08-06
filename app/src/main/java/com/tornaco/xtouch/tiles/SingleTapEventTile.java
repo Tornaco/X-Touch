@@ -30,7 +30,7 @@ public class SingleTapEventTile extends QuickTile {
         descList = EventRes.getDescriptions(context.getResources());
 
         this.titleRes = R.string.title_single_tap;
-        this.iconRes = R.drawable.ic_touch_app_black_24dp;
+        this.iconRes = R.drawable.ic_looks_one_black_24dp;
 
         final int event = SettingsProvider.get().getInt(SettingsProvider.Key.SINGLE_TAP_ACTION);
         this.summaryRes = EventRes.getDescriptionRes(event);

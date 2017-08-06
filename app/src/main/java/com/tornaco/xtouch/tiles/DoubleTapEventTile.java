@@ -30,7 +30,7 @@ public class DoubleTapEventTile extends QuickTile {
         descList = EventRes.getDescriptions(context.getResources());
 
         this.titleRes = R.string.title_double_tap;
-        this.iconRes = R.drawable.ic_touch_app_black_24dp;
+        this.iconRes = R.drawable.ic_looks_two_black_24dp;
 
         final int event = SettingsProvider.get().getInt(SettingsProvider.Key.DOUBLE_TAP_ACTION);
         this.summaryRes = EventRes.getDescriptionRes(event);

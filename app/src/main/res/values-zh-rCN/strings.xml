@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">X Touch</string>
-    <string name="title_enabled">启用</string>
+    <string name="app_name">X-Touch</string>
+    <string name="title_enabled">启用X-Touch</string>
     <string name="title_need_access_service_enabled">辅助功能</string>
     <string name="summary_need_access_service_enabled">请接下来打开本应用的辅助功能</string>
     <string name="summary_need_access_service_disbaled">请接下来关闭本应用的辅助功能</string>
@@ -70,17 +70,17 @@
     <string name="title_restore_on_ime_hidden">位置恢复（实验）</string>
     <string name="summary_restore_on_ime_hidden">当IME隐藏时，恢复原来的位置</string>
     <string name="title_root_enabled">Root模式</string>
-    <string name="summary_root_enabled">尝试使用Root shell命令锁定屏幕或者清理内存</string>
+    <string name="summary_root_enabled">尝试使用Root解锁更多功能</string>
     <string name="summary_exp">实验</string>
     <string name="title_tap_feedback">触摸效果</string>
     <string name="action_power_dialog">关机菜单</string>
     <string name="action_hide">隐藏悬浮窗</string>
-    <string name="action_kill_current">结束当前应用</string>
+    <string name="action_kill_current">结束当前应用（Root）</string>
     <string name="action_switch_app">切换应用</string>
-    <string name="action_mem_opt">内存优化</string>
+    <string name="action_mem_opt">内存优化（Root）</string>
     <string name="title_no_recents">最近任务中隐藏</string>
     <string name="message_wait_app_to_restart">请等待系统重新启用本应用</string>
-    <string name="title_n_switch">使用N-R2方式切换应用</string>
-    <string name="title_hidden">Float view is hidden</string>
-    <string name="title_restore">Restore</string>
+    <string name="title_n_switch">N应用切换</string>
+    <string name="title_hidden">悬浮球已经隐藏，点击恢复</string>
+    <string name="title_restore">恢复</string>
 </resources>
