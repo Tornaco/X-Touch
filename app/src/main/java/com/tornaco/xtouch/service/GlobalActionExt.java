@@ -35,7 +35,8 @@ public interface GlobalActionExt {
             {8, GLOBAL_ACTION_KILL_CURRENT_APP},
             {9, GLOBAL_ACTION_HIDE},
             {10, GLOBAL_MEM_OPT},
-            {11, BYPASS},
+            {11, GLOBAL_ACTION_POWER_DIALOG},
+            {12, BYPASS},
 
     };
 
