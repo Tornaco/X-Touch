@@ -50,7 +50,8 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
     private FloatView mFloatView;
 
-    private int actionSingleTap, actionDoubleTap, actionSwipeUp, actionSwipeDown, actionSwipeLeft, actionSwipeRight;
+    private int actionSingleTap, actionDoubleTap, actionSwipeUp, actionSwipeDown, actionSwipeLeft, actionSwipeRight,
+            actionSwipeUpLarge, actionSwipeDownLarge, actionSwipeLeftLarge, actionSwipeRightLarge;
     private boolean vibrate, sound, mImeReposition, mRestoreIMEHidden, mRootEnabled;
 
     private SoundPool mSoundPool;
@@ -76,10 +77,16 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     private void readSettings() {
         actionSingleTap = SettingsProvider.get().getInt(SettingsProvider.Key.SINGLE_TAP_ACTION);
         actionDoubleTap = SettingsProvider.get().getInt(SettingsProvider.Key.DOUBLE_TAP_ACTION);
+
         actionSwipeUp = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_UP_ACTION);
         actionSwipeDown = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_DOWN_ACTION);
         actionSwipeLeft = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_LEFT_ACTION);
         actionSwipeRight = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_RIGHT_ACTION);
+
+        actionSwipeUpLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_UP_LARGE_ACTION);
+        actionSwipeDownLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_DOWN_LARGE_ACTION);
+        actionSwipeLeftLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_LEFT_LARGE_ACTION);
+        actionSwipeRightLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_RIGHT_LARGE_ACTION);
 
         sound = SettingsProvider.get().getBoolean(SettingsProvider.Key.SOUND);
         vibrate = SettingsProvider.get().getBoolean(SettingsProvider.Key.VIRBATE);
@@ -269,6 +276,25 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     }
 
     @Override
+    public void onSwipeDirectionLargeDistance(@NonNull FloatView.SwipeDirection direction) {
+        Logger.i("onSwipeDirectionLargeDistance: %s", direction);
+        switch (direction) {
+            case L:
+                perform(actionSwipeLeftLarge);
+                break;
+            case R:
+                perform(actionSwipeRightLarge);
+                break;
+            case U:
+                perform(actionSwipeUpLarge);
+                break;
+            case D:
+                perform(actionSwipeDownLarge);
+                break;
+        }
+    }
+
+    @Override
     public void perform(int action) {
         Logger.i("perform: %s", action);
         switch (action) {
@@ -310,7 +336,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         super.onConfigurationChanged(newConfig);
         if (mOrientation != newConfig.orientation) {
             mFloatView.refreshRect();
-            mFloatView.reposition();
+            mFloatView.exchangeXY();
             mOrientation = newConfig.orientation;
         }
     }

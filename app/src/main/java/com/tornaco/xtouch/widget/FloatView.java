@@ -43,7 +43,9 @@ public class FloatView extends FrameLayout {
     private WindowManager.LayoutParams mLp = new WindowManager.LayoutParams();
 
     private int mTouchSlop, mSwipeSlop;
+    private int mLargeSlop;
     private int mSize;
+    private int mScreenHeight, mScreenWidth;
     private int mTapDelay;
     private float density = getResources().getDisplayMetrics().density;
 
@@ -134,6 +136,10 @@ public class FloatView extends FrameLayout {
                 mFeedbackAnimEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.FEEDBACK_ANIM);
             }
 
+            if (o == SettingsProvider.Key.LARGE_SLOP) {
+                mLargeSlop = SettingsProvider.get().getInt(SettingsProvider.Key.LARGE_SLOP);
+            }
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -195,6 +201,7 @@ public class FloatView extends FrameLayout {
         mAlpha = (float) SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA) / (float) 100;
         mTapDelay = SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY);
         mSize = SettingsProvider.get().getInt(SettingsProvider.Key.SIZE);
+        mLargeSlop = SettingsProvider.get().getInt(SettingsProvider.Key.LARGE_SLOP);
         mFeedbackAnimEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.FEEDBACK_ANIM);
 
         SettingsProvider.get().addObserver(o);
@@ -241,22 +248,32 @@ public class FloatView extends FrameLayout {
                 float absX = Math.abs(x);
                 float absY = Math.abs(y);
 
+                boolean large = false;
+
                 if (absX > absY) {
                     // Check slot.
                     if (absX > mSwipeSlop) {
                         // Check direction.
                         swipeDirection = x > 0 ? SwipeDirection.L : SwipeDirection.R;
+                        int largeThs = (int) ((float) mLargeSlop / (float) 100 * (float) mScreenWidth);
+                        large = absX >= largeThs;
                     }
                 } else if (absX < absY) {
                     // Check slot.
                     if (absY > mSwipeSlop) {
                         // Check direction.
                         swipeDirection = y > 0 ? SwipeDirection.U : SwipeDirection.D;
+                        int largeThs = (int) ((float) mLargeSlop / (float) 100 * (float) mScreenHeight);
+                        large = absY >= largeThs;
                     }
                 }
 
                 if (swipeDirection != null) {
-                    mCallback.onSwipeDirection(swipeDirection);
+                    if (large) {
+                        mCallback.onSwipeDirectionLargeDistance(swipeDirection);
+                    } else {
+                        mCallback.onSwipeDirection(swipeDirection);
+                    }
                     performTapFeedbackIfNeed();
                 }
 
@@ -290,6 +307,10 @@ public class FloatView extends FrameLayout {
         mSwipeSlop = 50; // FIXME Read from Settings.
 
         mWm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+
+        mScreenHeight = mWm.getDefaultDisplay().getHeight();
+        mScreenWidth = mWm.getDefaultDisplay().getWidth();
+
         mLp.gravity = Gravity.START | Gravity.TOP;
         mLp.format = PixelFormat.RGBA_8888;
         mLp.width = dp2px(mSize);
@@ -486,15 +507,24 @@ public class FloatView extends FrameLayout {
         getWindowVisibleDisplayFrame(mRect);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
+    public void exchangeXY() {
+        int x = mLp.x;
+        mLp.x = mLp.y;
+        mLp.y = x;
+        mWm.updateViewLayout(this, mLp);
+    }
+
     public void reposition() {
         if (mLp.x < (mRect.width() - getWidth()) / 2) {
             mLp.x = dp2px(5);
         } else {
-            mLp.x = mRect.width() - dp2px(55);
+            mLp.x = mRect.width() - dp2px(mSize);
         }
         if (mLp.y < mRect.top) {
             mLp.y = mRect.top;
         }
+
         mWm.updateViewLayout(this, mLp);
     }
 
@@ -532,6 +562,8 @@ public class FloatView extends FrameLayout {
         void onDoubleTap();
 
         void onSwipeDirection(@NonNull SwipeDirection direction);
+
+        void onSwipeDirectionLargeDistance(@NonNull SwipeDirection direction);
 
         void onLongPress();
     }

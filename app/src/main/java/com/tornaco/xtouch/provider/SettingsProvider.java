@@ -36,6 +36,7 @@ public class SettingsProvider extends Observable {
         CUSTOM_IMAGE(null),
         SWIPE_SLOT(50),
         TAP_DELAY(200),
+        LARGE_SLOP(50),
         LONG_PRESS_TIMEOUT(ViewConfiguration.getLongPressTimeout()),
         SINGLE_TAP_ACTION(GlobalActionExt.GLOBAL_ACTION_BACK),
         DOUBLE_TAP_ACTION(GlobalActionExt.GLOBAL_ACTION_HOME),
@@ -43,6 +44,11 @@ public class SettingsProvider extends Observable {
         SWIPE_DOWN_ACTION(GlobalActionExt.GLOBAL_ACTION_NOTIFICATIONS),
         SWIPE_LEFT_ACTION(GlobalActionExt.GLOBAL_ACTION_NOTIFICATIONS),
         SWIPE_RIGHT_ACTION(GlobalActionExt.GLOBAL_ACTION_NOTIFICATIONS),
+
+        SWIPE_UP_LARGE_ACTION(GlobalActionExt.BYPASS),
+        SWIPE_DOWN_LARGE_ACTION(GlobalActionExt.BYPASS),
+        SWIPE_LEFT_LARGE_ACTION(GlobalActionExt.BYPASS),
+        SWIPE_RIGHT_LARGE_ACTION(GlobalActionExt.BYPASS),
         IME_REPOSITION(true),
         ENABLED(false);
 

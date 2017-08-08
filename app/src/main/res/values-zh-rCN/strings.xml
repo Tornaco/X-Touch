@@ -66,7 +66,7 @@
     <string name="title_swipe_down">下滑</string>
     <string name="title_swipe_up">上滑</string>
     <string name="title_long_press_delay">长按检测延时</string>
-    <string name="title_size">球的大小</string>
+    <string name="title_size">悬浮球大小</string>
     <string name="title_restore_on_ime_hidden">位置恢复（实验）</string>
     <string name="summary_restore_on_ime_hidden">当IME隐藏时，恢复原来的位置</string>
     <string name="title_root_enabled">Root模式</string>
@@ -76,11 +76,17 @@
     <string name="action_power_dialog">关机菜单</string>
     <string name="action_hide">隐藏悬浮窗</string>
     <string name="action_kill_current">结束当前应用（Root）</string>
-    <string name="action_switch_app">切换应用</string>
+    <string name="action_switch_app">切换上一个应用</string>
     <string name="action_mem_opt">内存优化（Root）</string>
     <string name="title_no_recents">最近任务中隐藏</string>
     <string name="message_wait_app_to_restart">请等待系统重新启用本应用</string>
     <string name="title_n_switch">N应用切换</string>
     <string name="title_hidden">悬浮球已经隐藏，点击恢复</string>
     <string name="title_restore">恢复</string>
+    <string name="summary_n_switch">在N+设备上通过双击最近任务按键切换上一个应用</string>
+    <string name="title_large_slop">长距离百分比</string>
+    <string name="title_key_settings">按键与手势</string>
+    <string name="category_gesture">手势</string>
+    <string name="category_gesture_large">长距离手势</string>
+    <string name="summary_large_slop">将会使用 [该百分比%1$s乘以屏幕尺寸（长度或者宽度）] 来检测是否长距离手势</string>
 </resources>

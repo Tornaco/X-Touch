@@ -78,11 +78,17 @@
     <string name="action_power_dialog">Power dialog</string>
     <string name="action_hide">Hide float view</string>
     <string name="action_kill_current">Kill current app(Root)</string>
-    <string name="action_switch_app">Switch app</string>
+    <string name="action_switch_app">Nav to previous app</string>
     <string name="action_mem_opt">Memory opt(Root)</string>
     <string name="title_no_recents">No recents</string>
-    <string name="message_wait_app_to_restart">Wait System to re-enable components</string>
+    <string name="message_wait_app_to_restart">Wait for Android to re-enable our components</string>
     <string name="title_n_switch">Switch app with N feature</string>
     <string name="title_hidden">Float view is hidden, tap to show again</string>
     <string name="title_restore">Restore</string>
+    <string name="summary_n_switch">Switch app by double click RECENT key for N+ devices</string>
+    <string name="title_large_slop">Large distance percent</string>
+    <string name="title_key_settings">Keys and gestures</string>
+    <string name="category_gesture">Gesture</string>
+    <string name="category_gesture_large">Gesture when large distance</string>
+    <string name="summary_large_slop">The value of [%1$s*screen-dimen(x or y)] will be use for detect large distance gesture</string>
 </resources>

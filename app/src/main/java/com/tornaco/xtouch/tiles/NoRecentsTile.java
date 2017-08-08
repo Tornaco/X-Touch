@@ -23,7 +23,7 @@ public class NoRecentsTile extends QuickTile {
         super(context);
 
         this.titleRes = R.string.title_no_recents;
-        this.iconRes = R.drawable.ic_menu_black_24dp;
+        this.iconRes = R.drawable.ic_do_not_disturb_alt_black_24dp;
         this.tileView = new SwitchTileView(context) {
             @Override
             protected void onBindActionView(RelativeLayout container) {

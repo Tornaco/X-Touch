@@ -20,7 +20,8 @@ public class NSwitchAppTile extends QuickTile {
         super(context);
 
         this.titleRes = R.string.title_n_switch;
-        this.iconRes = R.drawable.ic_apps_black_24dp;
+        this.summaryRes =R.string.summary_n_switch;
+        this.iconRes = R.drawable.ic_skip_next_black_24dp;
         this.tileView = new SwitchTileView(context) {
             @Override
             protected void onBindActionView(RelativeLayout container) {
