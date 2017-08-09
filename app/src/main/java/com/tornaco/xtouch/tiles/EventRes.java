@@ -39,6 +39,8 @@ public class EventRes {
                 return R.string.action_power_dialog;
             case GlobalActionExt.GLOBAL_ACTION_HIDE:
                 return R.string.action_hide;
+            case GlobalActionExt.GLOBAL_ACTION_RESTORE:
+                return R.string.action_restore;
             case GlobalActionExt.GLOBAL_ACTION_KILL_CURRENT_APP:
                 return R.string.action_kill_current;
             case GlobalActionExt.GLOBAL_ACTION_SWITCH_APP:

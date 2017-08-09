@@ -43,8 +43,6 @@ public class Dashboard extends DashboardFragment {
         settings.addTile(new EdgeTile(getContext()));
         settings.addTile(new SoundTile(getContext()));
         settings.addTile(new VibrateTile(getContext()));
-        settings.addTile(new TapDelayTile(getContext()));
-        settings.addTile(new LongPressDelayTile(getContext()));
         settings.addTile(new IMETile(getContext()));
         settings.addTile(new RestoreImeHiddenTile(getContext()));
 
@@ -75,7 +73,7 @@ public class Dashboard extends DashboardFragment {
 
         categories.add(def);
         categories.add(settings);
-        categories.add(ad);
+        // categories.add(ad);
         categories.add(anim);
         categories.add(key);
         categories.add(dev);

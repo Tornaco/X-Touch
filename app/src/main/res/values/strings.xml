@@ -91,4 +91,11 @@
     <string name="category_gesture">Gesture</string>
     <string name="category_gesture_large">Gesture when large distance</string>
     <string name="summary_large_slop">The value of [%1$s*screen-dimen(x or y)] will be use for detect large distance gesture</string>
+    <string name="title_panic_detection">Panic detection</string>
+    <string name="summary_panic_detection">Go home when detected 3 times back event in 300ms</string>
+    <string name="title_screen_to_l">Screen rotate to landscape</string>
+    <string name="title_screen_to_p">Screen rotate to portrait</string>
+    <string name="category_others">Others</string>
+    <string name="category_screen">Screen</string>
+    <string name="action_restore">Restore float view</string>
 </resources>

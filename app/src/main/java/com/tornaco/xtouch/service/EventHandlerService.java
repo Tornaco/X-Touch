@@ -14,6 +14,7 @@ import android.hardware.input.InputManager;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -51,8 +52,8 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     private FloatView mFloatView;
 
     private int actionSingleTap, actionDoubleTap, actionSwipeUp, actionSwipeDown, actionSwipeLeft, actionSwipeRight,
-            actionSwipeUpLarge, actionSwipeDownLarge, actionSwipeLeftLarge, actionSwipeRightLarge;
-    private boolean vibrate, sound, mImeReposition, mRestoreIMEHidden, mRootEnabled;
+            actionSwipeUpLarge, actionSwipeDownLarge, actionSwipeLeftLarge, actionSwipeRightLarge, screenToL, screenToP;
+    private boolean vibrate, sound, mImeReposition, mRestoreIMEHidden, mRootEnabled, mPanicDetectionEnabled;
 
     private SoundPool mSoundPool;
     private int mStartSound;
@@ -87,6 +88,11 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         actionSwipeDownLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_DOWN_LARGE_ACTION);
         actionSwipeLeftLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_LEFT_LARGE_ACTION);
         actionSwipeRightLarge = SettingsProvider.get().getInt(SettingsProvider.Key.SWIPE_RIGHT_LARGE_ACTION);
+
+        screenToL = SettingsProvider.get().getInt(SettingsProvider.Key.SCREEN_TO_L_ACTION);
+        screenToP = SettingsProvider.get().getInt(SettingsProvider.Key.SCREEN_TO_P_ACTION);
+
+        mPanicDetectionEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.PANIC_DETECTION);
 
         sound = SettingsProvider.get().getBoolean(SettingsProvider.Key.SOUND);
         vibrate = SettingsProvider.get().getBoolean(SettingsProvider.Key.VIRBATE);
@@ -238,10 +244,36 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         return super.onUnbind(intent);
     }
 
+    private int clickTimes = 0;
+    private static final int PANIC_DETECTION_TIMES = 3;
+    private static final int PANIC_DETECTION_TIME_MILLS = 3 * 100;
+
+    private Handler h = new Handler(Looper.getMainLooper());
+
     @Override
     public void onSingleTap() {
         Logger.d("onSingleTap");
+
+        // Check if panic.
+        if (mPanicDetectionEnabled && clickTimes >= PANIC_DETECTION_TIMES) {
+            Logger.i("Panic!!! Let's go home! ---@%s", clickTimes);
+            clickTimes = 0;
+            perform(AccessibilityService.GLOBAL_ACTION_HOME);
+            return;
+        }
+
         perform(actionSingleTap);
+
+        // Reset.
+        if (mPanicDetectionEnabled) {
+            clickTimes++;
+            h.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    clickTimes = 0;
+                }
+            }, PANIC_DETECTION_TIME_MILLS);
+        }
     }
 
     @Override
@@ -296,6 +328,10 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
     @Override
     public void perform(int action) {
+        perform(action, true);
+    }
+
+    public void perform(int action, boolean feedback) {
         Logger.i("perform: %s", action);
         switch (action) {
             case GlobalActionExt.GLOBAL_ACTION_LOCK_SCREEN:
@@ -315,13 +351,17 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                 buildNotification();
                 mFloatView.hide();
                 break;
+            case GLOBAL_ACTION_RESTORE:
+                NotificationManagerCompat.from(getApplicationContext()).cancel(NOTIFICATION_RESTORE_ID);
+                mFloatView.show();
+                break;
             case BYPASS:
                 break;
             default:
                 performGlobalAction(action);
                 break;
         }
-        if (action != BYPASS) {
+        if (feedback && action != BYPASS) {
             if (sound) {
                 mSoundPool.play(mStartSound, 1.0f, 1.0f, 0, 0, 1.0f);
             }
@@ -335,6 +375,15 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (mOrientation != newConfig.orientation) {
+
+            // Get L or P.
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // L To L
+                perform(screenToL, false);
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                perform(screenToP, false);
+            }
+
             mFloatView.refreshRect();
             mFloatView.exchangeXY();
             mOrientation = newConfig.orientation;
@@ -378,7 +427,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         unregisterReceiver(mActionReceiver);
     }
 
-    // FIXME Missing permission.
+    // FIXME Need Xposed.
     private static class InputManagerCompat {
 
         static void lock() {

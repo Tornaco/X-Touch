@@ -38,6 +38,7 @@ public class SettingsProvider extends Observable {
         TAP_DELAY(200),
         LARGE_SLOP(50),
         LONG_PRESS_TIMEOUT(ViewConfiguration.getLongPressTimeout()),
+
         SINGLE_TAP_ACTION(GlobalActionExt.GLOBAL_ACTION_BACK),
         DOUBLE_TAP_ACTION(GlobalActionExt.GLOBAL_ACTION_HOME),
         SWIPE_UP_ACTION(GlobalActionExt.GLOBAL_ACTION_RECENTS),
@@ -49,6 +50,13 @@ public class SettingsProvider extends Observable {
         SWIPE_DOWN_LARGE_ACTION(GlobalActionExt.BYPASS),
         SWIPE_LEFT_LARGE_ACTION(GlobalActionExt.BYPASS),
         SWIPE_RIGHT_LARGE_ACTION(GlobalActionExt.BYPASS),
+
+        SCREEN_TO_L_ACTION(GlobalActionExt.BYPASS),
+        SCREEN_TO_P_ACTION(GlobalActionExt.BYPASS),
+
+
+        PANIC_DETECTION(true),
+
         IME_REPOSITION(true),
         ENABLED(false);
 

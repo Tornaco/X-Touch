@@ -89,4 +89,11 @@
     <string name="category_gesture">手势</string>
     <string name="category_gesture_large">长距离手势</string>
     <string name="summary_large_slop">将会使用 [该百分比%1$s乘以屏幕尺寸（长度或者宽度）] 来检测是否长距离手势</string>
+    <string name="title_panic_detection">捉急侦测</string>
+    <string name="summary_panic_detection">当检测到你在300ms内连续点击3次返回按键时，直接返回home</string>
+    <string name="title_screen_to_l">屏幕转向横屏</string>
+    <string name="title_screen_to_p">屏幕转向竖屏</string>
+    <string name="category_others">其他</string>
+    <string name="category_screen">屏幕</string>
+    <string name="action_restore">显示悬浮窗</string>
 </resources>

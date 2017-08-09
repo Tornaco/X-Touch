@@ -18,6 +18,8 @@ public interface GlobalActionExt {
     int GLOBAL_ACTION_SWITCH_APP = 101;
     int GLOBAL_ACTION_KILL_CURRENT_APP = 102;
     int GLOBAL_ACTION_HIDE = 103;
+    int GLOBAL_ACTION_RESTORE = 105;
+
     int GLOBAL_MEM_OPT = 104;
 
 
@@ -34,8 +36,9 @@ public interface GlobalActionExt {
             {7, GLOBAL_ACTION_SWITCH_APP},
             {8, GLOBAL_ACTION_KILL_CURRENT_APP},
             {9, GLOBAL_ACTION_HIDE},
-            {10, GLOBAL_ACTION_POWER_DIALOG},
-            {11, BYPASS},
+            {10, GLOBAL_ACTION_RESTORE},
+            {11, GLOBAL_ACTION_POWER_DIALOG},
+            {12, BYPASS},
 
     };
 
