@@ -65,5 +65,6 @@ public class KeysFragment extends DashboardFragment {
 
         categories.add(ges);
         categories.add(gesLarge);
+        categories.add(space);
     }
 }
