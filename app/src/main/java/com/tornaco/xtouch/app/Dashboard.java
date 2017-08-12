@@ -11,7 +11,7 @@ import com.tornaco.xtouch.tiles.IMETile;
 import com.tornaco.xtouch.tiles.ImageTile;
 import com.tornaco.xtouch.tiles.KeysTile;
 import com.tornaco.xtouch.tiles.LockScreenPermTile;
-import com.tornaco.xtouch.tiles.LongPressDelayTile;
+import com.tornaco.xtouch.tiles.LockedTile;
 import com.tornaco.xtouch.tiles.NSwitchAppTile;
 import com.tornaco.xtouch.tiles.NoRecentsTile;
 import com.tornaco.xtouch.tiles.RestoreImeHiddenTile;
@@ -19,7 +19,6 @@ import com.tornaco.xtouch.tiles.RootTile;
 import com.tornaco.xtouch.tiles.RotateTile;
 import com.tornaco.xtouch.tiles.SizeTile;
 import com.tornaco.xtouch.tiles.SoundTile;
-import com.tornaco.xtouch.tiles.TapDelayTile;
 import com.tornaco.xtouch.tiles.TapFeedbackTile;
 import com.tornaco.xtouch.tiles.ToggleSwitchTile;
 import com.tornaco.xtouch.tiles.VibrateTile;
@@ -45,6 +44,7 @@ public class Dashboard extends DashboardFragment {
         settings.addTile(new VibrateTile(getContext()));
         settings.addTile(new IMETile(getContext()));
         settings.addTile(new RestoreImeHiddenTile(getContext()));
+        settings.addTile(new LockedTile(getContext()));
 
         Category ad = new Category();
         if (!BuildConfig.DEBUG && !SettingsProvider.get().getBoolean(SettingsProvider.Key.PAID)) {

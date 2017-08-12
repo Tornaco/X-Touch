@@ -54,8 +54,8 @@ public class SizeTile extends QuickTile {
                 try {
                     int rate = Integer.parseInt(text);
 
-                    if (rate < 0 || rate > 9999) {
-                        Toast.makeText(context, ">=0 && <=222 ~.~", Toast.LENGTH_LONG).show();
+                    if (rate < 0 || rate > 120) {
+                        Toast.makeText(context, ">=0 && <=120 ~.~", Toast.LENGTH_LONG).show();
                         return;
                     }
 

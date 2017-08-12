@@ -49,7 +49,7 @@ public class FloatView extends FrameLayout {
     private int mTapDelay;
     private float density = getResources().getDisplayMetrics().density;
 
-    private boolean mDoubleTapEnabled, mEdgeEnabled, mRotate, mHeartBeat, mFeedbackAnimEnabled;
+    private boolean mDoubleTapEnabled, mEdgeEnabled, mRotate, mHeartBeat, mFeedbackAnimEnabled, mLocked;
     private float mAlpha;
 
     private GestureDetectorCompat mDetectorCompat;
@@ -140,12 +140,9 @@ public class FloatView extends FrameLayout {
                 mLargeSlop = SettingsProvider.get().getInt(SettingsProvider.Key.LARGE_SLOP);
             }
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    dump();
-                }
-            });
+            if (o == SettingsProvider.Key.LOCKED) {
+                mLocked = SettingsProvider.get().getBoolean(SettingsProvider.Key.LOCKED);
+            }
         }
     };
 
@@ -203,6 +200,7 @@ public class FloatView extends FrameLayout {
         mSize = SettingsProvider.get().getInt(SettingsProvider.Key.SIZE);
         mLargeSlop = SettingsProvider.get().getInt(SettingsProvider.Key.LARGE_SLOP);
         mFeedbackAnimEnabled = SettingsProvider.get().getBoolean(SettingsProvider.Key.FEEDBACK_ANIM);
+        mLocked = SettingsProvider.get().getBoolean(SettingsProvider.Key.LOCKED);
 
         SettingsProvider.get().addObserver(o);
 
@@ -335,7 +333,7 @@ public class FloatView extends FrameLayout {
                         isDragging = false;
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        if (inDragMode) {
+                        if (!mLocked && inDragMode) {
                             int dx = (int) (event.getRawX() - startX);
                             int dy = (int) (event.getRawY() - startY);
                             if ((dx * dx + dy * dy) > mTouchSlop) {
@@ -350,7 +348,7 @@ public class FloatView extends FrameLayout {
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         touchX = touchY = 0.0F;
-                        if (isDragging) {
+                        if (!mLocked && isDragging) {
                             if (mEdgeEnabled) {
                                 reposition();
                             }
@@ -463,7 +461,7 @@ public class FloatView extends FrameLayout {
     }
 
     public boolean isShowing() {
-        return mContainerView.getVisibility() == VISIBLE;
+        return getVisibility() == VISIBLE;
     }
 
     public void hide() {
@@ -471,13 +469,13 @@ public class FloatView extends FrameLayout {
         AnimatorSet set = new AnimatorSet();
         final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 1f, 0f);
         final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 1f, 0f);
-        set.setDuration(150);
+        set.setDuration(800);
         set.setInterpolator(new LinearInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mContainerView.setVisibility(INVISIBLE);
+                setVisibility(INVISIBLE);
             }
         });
         set.playTogether(alphaAnimatorX, alphaAnimatorY);
@@ -487,11 +485,11 @@ public class FloatView extends FrameLayout {
     public void show() {
         Logger.i("Show: isShowing: %s", isDragging);
         if (isShowing()) return;
-        mContainerView.setVisibility(VISIBLE);
+        setVisibility(VISIBLE);
         AnimatorSet set = new AnimatorSet();
         final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 0f, 1f);
         final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 0f, 1f);
-        set.setDuration(150);
+        set.setDuration(800);
         set.setInterpolator(new LinearInterpolator());
         set.playTogether(alphaAnimatorX, alphaAnimatorY);
         set.start();
@@ -517,7 +515,7 @@ public class FloatView extends FrameLayout {
 
     public void reposition() {
         if (mLp.x < (mRect.width() - getWidth()) / 2) {
-            mLp.x = dp2px(5);
+            mLp.x = 0;
         } else {
             mLp.x = mRect.width() - dp2px(mSize);
         }

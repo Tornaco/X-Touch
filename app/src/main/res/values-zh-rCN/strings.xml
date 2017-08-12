@@ -96,4 +96,5 @@
     <string name="category_others">其他</string>
     <string name="category_screen">屏幕</string>
     <string name="action_restore">显示悬浮窗</string>
+    <string name="title_lock_position">锁定位置</string>
 </resources>

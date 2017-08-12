@@ -34,6 +34,7 @@ public class SettingsProvider extends Observable {
         FEEDBACK_ANIM(true),
         RESTORE_IME_HIDDEN(true),
         CUSTOM_IMAGE(null),
+        LOCKED(false),
         SWIPE_SLOT(50),
         TAP_DELAY(200),
         LARGE_SLOP(50),
