@@ -4,9 +4,11 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 
+import com.tornaco.xtouch.BuildConfig;
 import com.tornaco.xtouch.provider.SettingsProvider;
 
 import org.newstand.logger.Logger;
+import org.newstand.logger.Settings;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,6 +22,11 @@ public class XTouchApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Logger.config(Settings.builder().tag("XTouchApp").logLevel(
+                BuildConfig.DEBUG ? Logger.LogLevel.ALL : Logger.LogLevel.WARN
+        ).build());
+
         SettingsProvider.init(this);
 
         SettingsProvider.get().addObserver(new Observer() {

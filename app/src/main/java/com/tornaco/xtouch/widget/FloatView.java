@@ -469,7 +469,7 @@ public class FloatView extends FrameLayout {
         AnimatorSet set = new AnimatorSet();
         final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 1f, 0f);
         final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 1f, 0f);
-        set.setDuration(800);
+        set.setDuration(300);
         set.setInterpolator(new LinearInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -489,7 +489,7 @@ public class FloatView extends FrameLayout {
         AnimatorSet set = new AnimatorSet();
         final ObjectAnimator alphaAnimatorX = ObjectAnimator.ofFloat(mContainerView, "scaleX", 0f, 1f);
         final ObjectAnimator alphaAnimatorY = ObjectAnimator.ofFloat(mContainerView, "scaleY", 0f, 1f);
-        set.setDuration(800);
+        set.setDuration(300);
         set.setInterpolator(new LinearInterpolator());
         set.playTogether(alphaAnimatorX, alphaAnimatorY);
         set.start();

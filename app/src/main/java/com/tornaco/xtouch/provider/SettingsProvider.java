@@ -18,6 +18,8 @@ public class SettingsProvider extends Observable {
 
     private static final String PREF_NAME = "x-touch_app_settings";
 
+    public static final String OPEN_SOURCE_GIT_URL = "https://github.com/Tornaco/X-Touch";
+
 
     public enum Key {
         PAID(false),
@@ -25,7 +27,7 @@ public class SettingsProvider extends Observable {
         NO_RECENTS(false),
         SWITCH_APP_WITH_N_FEATURE(true),
         ALPHA(100),
-        SIZE(52),
+        SIZE(48),
         EDGE(false),
         SOUND(true),
         VIRBATE(true),

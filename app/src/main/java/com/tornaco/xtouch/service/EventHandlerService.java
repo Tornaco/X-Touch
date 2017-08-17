@@ -204,22 +204,25 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         super.onTaskRemoved(rootIntent);
     }
 
-    public interface AccessibilityEventListener {
+    interface AccessibilityEventListener {
         void onAccessibilityEvent(AccessibilityEvent accessibilityEvent);
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
+        Logger.d("onAccessibilityEvent: %s", accessibilityEvent.getEventType());
         if (mOnAccessibilityEventListener != null)
             mOnAccessibilityEventListener.onAccessibilityEvent(accessibilityEvent);
-        if (mImeReposition && accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+        if (mImeReposition && (accessibilityEvent.getEventType()
+                == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)) {
             String pkgName = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : "";
             String clz = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : "";
             Logger.i("ES: onAccessibilityEvent: %s, %s", pkgName, clz);
             if (ImePackageProvider.isIME(pkgName)) {
-                Logger.i("We are in IME");
+                Logger.i("We are in IME: %s", pkgName);
                 mFloatView.repositionInIme(mScreenHeight, mIMEHeight);
             } else if (mRestoreIMEHidden) {
+                Logger.i("We are out of IME");
                 mFloatView.restoreXYOnImeHiddenIfNeed();
             }
         }
@@ -429,7 +432,6 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
     // FIXME Need Xposed.
     private static class InputManagerCompat {
-
         static void lock() {
             InputManager manager;
             Method mGet = ReflectionUtils.findMethod(InputManager.class, "getInstance");
