@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Float dock</string>
+    <string name="app_name">Float touch</string>
     <string name="intro">Intro</string>
-    <string name="title_enabled">Enable Float dock</string>
+    <string name="title_enabled">Enable Float touch</string>
     <string name="title_need_access_service_enabled">Accessibility service</string>
     <string name="summary_need_access_service_enabled">Please turn on Accessibility service for this app</string>
     <string name="summary_need_access_service_disbaled">Please turn off Accessibility for this app</string>

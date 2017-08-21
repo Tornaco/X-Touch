@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">悬浮手势</string>
-    <string name="title_enabled">启用悬浮按钮</string>
+    <string name="app_name">悬浮球</string>
+    <string name="title_enabled">启用悬浮球</string>
     <string name="title_need_access_service_enabled">辅助功能</string>
     <string name="summary_need_access_service_enabled">请接下来打开本应用的辅助功能</string>
     <string name="summary_need_access_service_disbaled">请接下来关闭本应用的辅助功能</string>
