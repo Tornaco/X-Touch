@@ -1,9 +1,6 @@
 package com.tornaco.xtouch.app;
 
-import com.tornaco.xtouch.BuildConfig;
 import com.tornaco.xtouch.R;
-import com.tornaco.xtouch.provider.SettingsProvider;
-import com.tornaco.xtouch.tiles.AdTile;
 import com.tornaco.xtouch.tiles.AlphaTile;
 import com.tornaco.xtouch.tiles.BlurTile;
 import com.tornaco.xtouch.tiles.CropToCircleTile;
@@ -47,11 +44,11 @@ public class Dashboard extends DashboardFragment {
         settings.addTile(new RestoreImeHiddenTile(getContext()));
         settings.addTile(new LockedTile(getContext()));
 
-        Category ad = new Category();
-        if (!BuildConfig.DEBUG && !SettingsProvider.get().getBoolean(SettingsProvider.Key.PAID)) {
-            ad.titleRes = R.string.title_ad_area;
-            ad.addTile(new AdTile(getContext()));
-        }
+//        Category ad = new Category();
+//        if (!BuildConfig.DEBUG && !SettingsProvider.get().getBoolean(SettingsProvider.Key.PAID)) {
+//            ad.titleRes = R.string.title_ad_area;
+//            ad.addTile(new AdTile(getContext()));
+//        }
 
         Category view = new Category();
         view.titleRes = R.string.category_view;
@@ -62,7 +59,7 @@ public class Dashboard extends DashboardFragment {
         view.addTile(new AlphaTile(getContext()));
 
         Category image = new Category();
-        view.titleRes = R.string.category_image;
+        image.titleRes = R.string.category_image;
 
         image.addTile(new ImageTile(getActivity()));
         image.addTile(new CropToCircleTile(getActivity()));
@@ -79,10 +76,9 @@ public class Dashboard extends DashboardFragment {
 
         categories.add(def);
         categories.add(settings);
-        // categories.add(ad);
+        categories.add(key);
         categories.add(view);
         categories.add(image);
-        categories.add(key);
         categories.add(dev);
     }
 }
