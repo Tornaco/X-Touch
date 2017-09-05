@@ -7,5 +7,5 @@
 
 ## Art
 
-![1](art/device-2017-08-03-144914.png)
-![2](art/device-2017-08-03-144954.png)
+![1](art/1.jpg)
+![2](art/2.jpg)
