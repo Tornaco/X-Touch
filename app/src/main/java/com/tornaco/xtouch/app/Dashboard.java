@@ -5,6 +5,8 @@ import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.provider.SettingsProvider;
 import com.tornaco.xtouch.tiles.AdTile;
 import com.tornaco.xtouch.tiles.AlphaTile;
+import com.tornaco.xtouch.tiles.BlurTile;
+import com.tornaco.xtouch.tiles.CropToCircleTile;
 import com.tornaco.xtouch.tiles.EdgeTile;
 import com.tornaco.xtouch.tiles.HeartbeatTile;
 import com.tornaco.xtouch.tiles.IMETile;
@@ -15,9 +17,8 @@ import com.tornaco.xtouch.tiles.LockedTile;
 import com.tornaco.xtouch.tiles.NSwitchAppTile;
 import com.tornaco.xtouch.tiles.NoRecentsTile;
 import com.tornaco.xtouch.tiles.RestoreImeHiddenTile;
-import com.tornaco.xtouch.tiles.RootTile;
 import com.tornaco.xtouch.tiles.RotateTile;
-import com.tornaco.xtouch.tiles.SizeTile;
+import com.tornaco.xtouch.tiles.SizeTile2;
 import com.tornaco.xtouch.tiles.SoundTile;
 import com.tornaco.xtouch.tiles.TapFeedbackTile;
 import com.tornaco.xtouch.tiles.ToggleSwitchTile;
@@ -52,14 +53,20 @@ public class Dashboard extends DashboardFragment {
             ad.addTile(new AdTile(getContext()));
         }
 
-        Category anim = new Category();
-        anim.titleRes = R.string.category_view;
-        anim.addTile(new SizeTile(getContext()));
-        anim.addTile(new TapFeedbackTile(getContext()));
-        anim.addTile(new HeartbeatTile(getContext()));
-        anim.addTile(new RotateTile(getContext()));
-        anim.addTile(new AlphaTile(getContext()));
-        anim.addTile(new ImageTile(getActivity()));
+        Category view = new Category();
+        view.titleRes = R.string.category_view;
+        view.addTile(new SizeTile2(getContext()));
+        view.addTile(new TapFeedbackTile(getContext()));
+        view.addTile(new HeartbeatTile(getContext()));
+        view.addTile(new RotateTile(getContext()));
+        view.addTile(new AlphaTile(getContext()));
+
+        Category image = new Category();
+        view.titleRes = R.string.category_image;
+
+        image.addTile(new ImageTile(getActivity()));
+        image.addTile(new CropToCircleTile(getActivity()));
+        image.addTile(new BlurTile(getActivity()));
 
         Category key = new Category();
         key.titleRes = R.string.category_key;
@@ -67,14 +74,14 @@ public class Dashboard extends DashboardFragment {
 
         Category dev = new Category();
         dev.titleRes = R.string.summary_exp;
-        dev.addTile(new RootTile(getActivity()));
         dev.addTile(new NoRecentsTile(getActivity()));
         dev.addTile(new NSwitchAppTile(getActivity()));
 
         categories.add(def);
         categories.add(settings);
         // categories.add(ad);
-        categories.add(anim);
+        categories.add(view);
+        categories.add(image);
         categories.add(key);
         categories.add(dev);
     }

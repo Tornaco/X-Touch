@@ -28,7 +28,7 @@ public class BitmapUtil {
     private static final int MAX_NUM_PIXELS_THUMBNAIL = 512 * 512;
 
     public static String compress(Context context, Bitmap bitmap) throws FileNotFoundException {
-        File to = new File(context.getCacheDir().getPath() + File.separator
+        File to = new File(context.getFilesDir().getPath() + File.separator
                 + UUID.randomUUID().toString());
         if (!to.getParentFile().exists() && !to.getParentFile().mkdirs()) {
             Logger.e("Fail mkdirs");

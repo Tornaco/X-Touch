@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Float touch</string>
+    <string name="app_name">X Touch</string>
     <string name="intro">Intro</string>
     <string name="title_enabled">Enable Float touch</string>
     <string name="title_need_access_service_enabled">Accessibility service</string>
@@ -99,4 +99,7 @@
     <string name="category_screen">Screen</string>
     <string name="action_restore">Restore float view</string>
     <string name="title_lock_position">Lock position</string>
+    <string name="title_blur">Blur</string>
+    <string name="title_crop_to_circle">Crop to circle</string>
+    <string name="category_image">Image</string>
 </resources>

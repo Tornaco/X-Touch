@@ -16,38 +16,38 @@ import java.util.Observer;
 import dev.nick.tiles.tile.QuickTile;
 import dev.nick.tiles.tile.QuickTileView;
 
-public class AlphaTile extends QuickTile {
+public class SizeTile2 extends QuickTile {
 
-    public AlphaTile(@NonNull Context context) {
+    public SizeTile2(@NonNull Context context) {
         super(context);
-        this.titleRes = R.string.title_alpha;
-        this.iconRes = R.drawable.ic_gradient_black_24dp;
+        this.titleRes = R.string.title_size;
+        this.iconRes = R.drawable.ic_adjust_black_24dp;
         this.tileView = new QuickTileView(context, this) {
             @Override
             public void onClick(View v) {
                 super.onClick(v);
-                showAlphaSeeker();
+                showSeeker();
             }
         };
-        this.summary = String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA));
+        this.summary = String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.SIZE));
         SettingsProvider.get().addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {
-                if (arg == SettingsProvider.Key.ALPHA) {
+                if (arg == SettingsProvider.Key.SIZE) {
                     getTileView().getSummaryTextView().setText(
-                            String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA))
+                            String.valueOf(SettingsProvider.get().getInt(SettingsProvider.Key.SIZE))
                     );
                 }
             }
         });
     }
 
-    private void showAlphaSeeker() {
+    private void showSeeker() {
         final SeekBar seekBar = new SeekBar(getContext());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                SettingsProvider.get().putInt(SettingsProvider.Key.ALPHA, i);
+                SettingsProvider.get().putInt(SettingsProvider.Key.SIZE, i);
             }
 
             @Override
@@ -60,18 +60,18 @@ public class AlphaTile extends QuickTile {
 
             }
         });
-        int alpha = SettingsProvider.get().getInt(SettingsProvider.Key.ALPHA);
+        int size = SettingsProvider.get().getInt(SettingsProvider.Key.SIZE);
         seekBar.setMax(100);
-        seekBar.setProgress(alpha);
+        seekBar.setProgress(size);
         new AlertDialog.Builder(getContext())
                 .setView(seekBar)
-                .setTitle(R.string.title_alpha)
+                .setTitle(R.string.title_size)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int current = seekBar.getProgress();
-                        SettingsProvider.get().putInt(SettingsProvider.Key.ALPHA, current);
+                        SettingsProvider.get().putInt(SettingsProvider.Key.SIZE, current);
                     }
                 })
                 .create()

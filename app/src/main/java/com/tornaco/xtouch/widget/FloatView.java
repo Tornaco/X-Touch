@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -35,6 +34,12 @@ import org.newstand.logger.Logger;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
+
+import dev.tornaco.vangogh.Vangogh;
+import dev.tornaco.vangogh.display.BlurEffect;
+import dev.tornaco.vangogh.display.CircleImageEffect;
+import dev.tornaco.vangogh.display.ImageEffect;
+import dev.tornaco.vangogh.display.appliers.FadeInApplier;
 
 public class FloatView extends FrameLayout {
 
@@ -107,19 +112,10 @@ public class FloatView extends FrameLayout {
                 mTapDelay = SettingsProvider.get().getInt(SettingsProvider.Key.TAP_DELAY);
             }
 
-            if (o == SettingsProvider.Key.CUSTOM_IMAGE) {
-                // Apply image.
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        String customPath = SettingsProvider.get().getString(SettingsProvider.Key.CUSTOM_IMAGE);
-                        if (!TextUtils.isEmpty(customPath) && new File(customPath).exists()) {
-                            mImageView.setImageBitmap(BitmapFactory.decodeFile(customPath));
-                        } else {
-                            mImageView.setImageResource(R.mipmap.ic_img_def2);
-                        }
-                    }
-                });
+            if (o == SettingsProvider.Key.CUSTOM_IMAGE
+                    || o == SettingsProvider.Key.BLUR
+                    || o == SettingsProvider.Key.CROP_TO_CIRCLE) {
+                applyImage();
             }
 
             if (o == SettingsProvider.Key.SIZE) {
@@ -145,6 +141,38 @@ public class FloatView extends FrameLayout {
             }
         }
     };
+
+    private void applyImage() {
+        // Apply image.
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                String customPath = SettingsProvider.get().getString(SettingsProvider.Key.CUSTOM_IMAGE);
+                Logger.i("Applying custom image: %s", customPath);
+                if (!TextUtils.isEmpty(customPath) && new File(customPath).exists()) {
+                    boolean cropToCircle = SettingsProvider.get().getBoolean(SettingsProvider.Key.CROP_TO_CIRCLE);
+                    boolean blur = SettingsProvider.get().getBoolean(SettingsProvider.Key.BLUR);
+                    ImageEffect[] effects = null;
+                    if (cropToCircle && blur) {
+                        effects = new ImageEffect[]{new BlurEffect(), new CircleImageEffect()};
+                    } else if (cropToCircle) {
+                        effects = new ImageEffect[]{new CircleImageEffect()};
+                    } else if (blur) {
+                        effects = new ImageEffect[]{new BlurEffect()};
+                    }
+                    Vangogh.from(getContext())
+                            .load(customPath)
+                            .skipDiskCache(true)
+                            .skipMemoryCache(true)
+                            .applier(new FadeInApplier())
+                            .effect(effects)
+                            .into(mImageView);
+                } else {
+                    mImageView.setImageResource(R.mipmap.ic_def_img);
+                }
+            }
+        });
+    }
 
     private void onPostSizeChange() {
         mLp.width = dp2px(mSize);
@@ -285,18 +313,7 @@ public class FloatView extends FrameLayout {
         mContainerView.setAlpha(mAlpha);
 
         mImageView = rootView.findViewById(R.id.image);
-        // Apply image.
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                String customPath = SettingsProvider.get().getString(SettingsProvider.Key.CUSTOM_IMAGE);
-                if (!TextUtils.isEmpty(customPath) && new File(customPath).exists()) {
-                    mImageView.setImageBitmap(BitmapFactory.decodeFile(customPath));
-                } else {
-                    mImageView.setImageResource(R.mipmap.ic_img_def2);
-                }
-            }
-        });
+        applyImage();
 
         getWindowVisibleDisplayFrame(mRect);
 
