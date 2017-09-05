@@ -7,5 +7,4 @@
 
 ## Art
 
-![1](art/1.jpg)
-![2](art/2.jpg)
+![1](art/aio.jpg)
