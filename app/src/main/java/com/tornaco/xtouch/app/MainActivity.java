@@ -84,6 +84,14 @@ public class MainActivity extends ContainerHostActivity {
         finish();
     }
 
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.shop) {
