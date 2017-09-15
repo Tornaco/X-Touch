@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 
 import com.tornaco.xtouch.BuildConfig;
 import com.tornaco.xtouch.provider.SettingsProvider;
+import com.xiaomi.ad.AdSdk;
 
 import org.newstand.logger.Logger;
 import org.newstand.logger.Settings;
@@ -19,6 +20,10 @@ import java.util.Observer;
  */
 
 public class XTouchApp extends Application {
+
+    public static final String AD_APP_ID = "2882303761517616845";
+    public static final String AD_SPLASH_ID = "6f9bbf504639eaca720b697bdb685e7b";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -79,5 +84,10 @@ public class XTouchApp extends Application {
                 }
             }
         });
+
+        // For AD start.
+        AdSdk.setDebugOn();
+        AdSdk.initialize(this, AD_APP_ID);
+        // For AD end.
     }
 }

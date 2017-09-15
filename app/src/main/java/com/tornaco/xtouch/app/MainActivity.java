@@ -1,14 +1,18 @@
 package com.tornaco.xtouch.app;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.common.SharedExecutor;
@@ -19,6 +23,10 @@ import com.tornaco.xtouch.util.BitmapUtil;
 
 import org.newstand.logger.Logger;
 
+import github.tornaco.permission.requester.RequiresPermission;
+import github.tornaco.permission.requester.RuntimePermissions;
+
+@RuntimePermissions
 public class MainActivity extends ContainerHostActivity {
 
     @Override
@@ -29,6 +37,30 @@ public class MainActivity extends ContainerHostActivity {
     @Override
     protected void showHomeAsUp() {
         // Hooked.
+    }
+
+    @Override
+    protected void showFragment() {
+        MainActivityPermissionRequester.onShowFragmentChecked(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionRequester.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    @RequiresPermission({Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.GET_TASKS,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE})
+    @RequiresPermission.OnDenied("onPermissionNotGrant")
+    protected void onShowFragment() {
+        super.onShowFragment();
     }
 
     @Override
@@ -44,6 +76,12 @@ public class MainActivity extends ContainerHostActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Keep
+    void onPermissionNotGrant() {
+        Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override

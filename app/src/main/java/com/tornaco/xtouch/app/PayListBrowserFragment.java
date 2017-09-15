@@ -1,12 +1,10 @@
 package com.tornaco.xtouch.app;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.model.PayExtra;
 import com.tornaco.xtouch.provider.PayExtraLoader;
@@ -27,13 +21,14 @@ import com.tornaco.xtouch.provider.PayExtraLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.functions.Consumer;
+import github.tornaco.permission.requester.RequiresPermission;
+import github.tornaco.permission.requester.RuntimePermissions;
 
 /**
  * Created by Tornaco on 2017/7/29.
  * Licensed with Apache.
  */
-
+@RuntimePermissions
 public class PayListBrowserFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -53,7 +48,7 @@ public class PayListBrowserFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle(R.string.title_pay_list);
-        showRetention();
+        PayListBrowserFragmentPermissionRequester.startLoadingChecked(this);
     }
 
     public void setupView(View root) {
@@ -73,7 +68,11 @@ public class PayListBrowserFragment extends Fragment {
         setupAdapter();
     }
 
-    private void startLoading() {
+
+    @RequiresPermission({Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @RequiresPermission.OnDenied("onPermissionNotGrant")
+    void startLoading() {
         swipeRefreshLayout.setRefreshing(true);
         new PayExtraLoader().loadAsync(getString(R.string.pay_list_url),
                 new PayExtraLoader.Callback() {
@@ -102,57 +101,8 @@ public class PayListBrowserFragment extends Fragment {
                 });
     }
 
-    private void requestPerms() {
-        RxPermissions rxPermissions = new RxPermissions(getActivity());
-        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean granted) throws Exception {
-                        if (granted) {
-                            onPermissionGrant();
-                        } else {
-                            onPermissionNotGrant();
-                        }
-                    }
-                });
-    }
-
-    private void onPermissionNotGrant() {
+    void onPermissionNotGrant() {
         getActivity().finish();
-    }
-
-    private void onPermissionGrant() {
-        startLoading();
-    }
-
-    private void showRetention() {
-        boolean hasBasicPermission = ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        if (!hasBasicPermission) {
-            new MaterialStyledDialog.Builder(getActivity())
-                    .setTitle(R.string.title_perm_require)
-                    .setDescription(R.string.summary_perm_require)
-                    .setIcon(R.drawable.ic_folder_white_24dp)
-                    .withDarkerOverlay(false)
-                    .setCancelable(false)
-                    .setPositiveText(android.R.string.ok)
-                    .setNegativeText(android.R.string.cancel)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            requestPerms();
-                        }
-                    })
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            getActivity().finish();
-                        }
-                    })
-                    .show();
-        } else {
-            onPermissionGrant();
-        }
     }
 
     protected void setupAdapter() {
@@ -171,6 +121,11 @@ public class PayListBrowserFragment extends Fragment {
         return new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PayListBrowserFragmentPermissionRequester.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     class TwoLinesViewHolder extends RecyclerView.ViewHolder {
 

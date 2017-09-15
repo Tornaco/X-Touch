@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.ViewConfiguration;
 
+import com.tornaco.xtouch.BuildConfig;
 import com.tornaco.xtouch.service.GlobalActionExt;
+
+import org.newstand.logger.Logger;
 
 import java.util.Observable;
 
@@ -23,6 +26,8 @@ public class SettingsProvider extends Observable {
 
     public enum Key {
         PAID(false),
+        AD_CLICKED_TIME_MILLS(0L),
+        FORCE_SHOW_AD(false),
         ROOT(false),
         NO_RECENTS(false),
         SWITCH_APP_WITH_N_FEATURE(true),
@@ -108,6 +113,16 @@ public class SettingsProvider extends Observable {
         notifyObservers(key);
     }
 
+    public long getLong(Key key) {
+        return getPref().getLong(toPrefKey(key), (Long) key.getDefValue());
+    }
+
+    public void putLong(Key key, long value) {
+        getPref().edit().putLong(toPrefKey(key), value).apply();
+        setChanged();
+        notifyObservers(key);
+    }
+
     public int getInt(Key key) {
         return getPref().getInt(toPrefKey(key), (Integer) key.getDefValue());
     }
@@ -126,5 +141,15 @@ public class SettingsProvider extends Observable {
         getPref().edit().putString(toPrefKey(key), value).apply();
         setChanged();
         notifyObservers(key);
+    }
+
+    public boolean shouldSkipAd() {
+        if (BuildConfig.DEBUG) return false;
+        if (getBoolean(Key.FORCE_SHOW_AD)) return false;
+        long adTime = getLong(Key.AD_CLICKED_TIME_MILLS);
+        long timeDis = System.currentTimeMillis() - adTime;
+        long limit = 24 * 60 * 60 * 1000;
+        Logger.i("timeDis: %s, limit %s, skip %s", timeDis, limit, timeDis < limit);
+        return timeDis < limit;
     }
 }

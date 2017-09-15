@@ -25,6 +25,14 @@ public class ContainerHostActivity extends TransitionSafeActivity {
         setContentView(R.layout.activity_with_container_with_appbar_template);
         setupToolbar();
         showHomeAsUp();
+        showFragment();
+    }
+
+    protected void showFragment() {
+        onShowFragment();
+    }
+
+    protected void onShowFragment() {
         replaceV4(R.id.container, onCreateFragment(), null, false);
     }
 

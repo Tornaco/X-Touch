@@ -7,8 +7,8 @@ android {
         applicationId "com.tornaco.xtouch"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 113
-        versionName "1.1.4"
+        versionCode 115
+        versionName "1.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -49,21 +49,16 @@ dependencies {
     compile 'com.koushikdutta.async:androidasync:2.1.9'
     // https://github.com/javiersantos/MaterialStyledDialogs
     compile 'com.github.javiersantos:MaterialStyledDialogs:2.1'
-
     // https://github.com/czy1121/settingscompat
     compile 'com.github.czy1121:settingscompat:1.1.4'
     compile 'com.android.support:design:26.+'
     compile 'com.chrisplus.rootmanager:library:2.0.5@aar'
     compile project(':tiles')
-
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:20.0'
-
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
-
     compile 'de.hdodenhof:circleimageview:2.1.0'
-
+    provided 'github.tornaco:permission-requester-annotation:1.1'
+    annotationProcessor 'github.tornaco:permission-requester-compiler:1.1'
     compile 'com.github.Tornaco:VanGogh:v0.1-alpha'
+    compile files('libs/AdSdk.jar')
 }
