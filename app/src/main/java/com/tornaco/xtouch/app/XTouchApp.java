@@ -28,6 +28,11 @@ public class XTouchApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // For AD start.
+        AdSdk.setDebugOn();
+        AdSdk.initialize(this, AD_APP_ID);
+        // For AD end.
+
         Logger.config(Settings.builder().tag("XTouchApp").logLevel(
                 BuildConfig.DEBUG ? Logger.LogLevel.ALL : Logger.LogLevel.WARN
         ).build());
@@ -84,10 +89,5 @@ public class XTouchApp extends Application {
                 }
             }
         });
-
-        // For AD start.
-        AdSdk.setDebugOn();
-        AdSdk.initialize(this, AD_APP_ID);
-        // For AD end.
     }
 }

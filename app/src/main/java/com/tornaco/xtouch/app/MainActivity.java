@@ -4,12 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -41,7 +43,17 @@ public class MainActivity extends ContainerHostActivity {
 
     @Override
     protected void showFragment() {
-        MainActivityPermissionRequester.onShowFragmentChecked(this);
+        if (!checkSelfPerm(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.GET_TASKS,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE
+        ))
+            MainActivityPermissionRequester.onShowFragmentChecked(this);
+        else
+            onShowFragment();
     }
 
     @Override
@@ -49,6 +61,15 @@ public class MainActivity extends ContainerHostActivity {
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MainActivityPermissionRequester.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private boolean checkSelfPerm(String... perm) {
+        for (String p : perm) {
+            if (ContextCompat.checkSelfPermission(this, p) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -89,7 +110,6 @@ public class MainActivity extends ContainerHostActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
     }
-
 
 
     @Override

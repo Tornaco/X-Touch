@@ -10,6 +10,8 @@ import com.tornaco.xtouch.provider.SettingsProvider;
 import com.xiaomi.ad.adView.BannerAd;
 import com.xiaomi.ad.common.pojo.AdEvent;
 
+import org.newstand.logger.Logger;
+
 import dev.nick.tiles.tile.QuickTile;
 import dev.nick.tiles.tile.TileView;
 
@@ -69,5 +71,6 @@ public class AdTile extends QuickTile {
 
     public void recycle() {
         mBannerAd.recycle();
+        Logger.i("recycle@mBannerAd");
     }
 }
