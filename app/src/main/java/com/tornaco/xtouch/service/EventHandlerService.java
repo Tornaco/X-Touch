@@ -3,6 +3,8 @@ package com.tornaco.xtouch.service;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
@@ -10,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.hardware.input.InputManager;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -42,6 +45,8 @@ import java.util.Observer;
 import ezy.assist.compat.SettingsCompat;
 
 public class EventHandlerService extends AccessibilityService implements FloatView.Callback, GlobalActionExt {
+
+    private static final String NOTIFICATION_CHANNEL_ID = "dev.tornaco.notification.channel.id.XTOUCH";
 
     private static final float IME_WINDOW_SIZE_SC = 2.7785f;
     public static final String ACTION_RESTORE = "action.restore";
@@ -123,6 +128,8 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
     @Override
     public void onCreate() {
         super.onCreate();
+
+        createNotificationChannelForO();
 
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         mScreenHeight = wm.getDefaultDisplay().getHeight();
@@ -411,11 +418,34 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
         return START_STICKY;
     }
 
+    private void createNotificationChannelForO() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            NotificationChannel notificationChannel;
+            notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    "xtouch",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
     private void buildNotification() {
         NotificationManagerCompat.from(getApplicationContext()).cancel(NOTIFICATION_RESTORE_ID);
+
+        Notification.Builder builder = createNotificationBuilder();
+
+        // Build channel for O.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(NOTIFICATION_CHANNEL_ID);
+        }
+
         NotificationManagerCompat.from(getApplicationContext())
                 .notify(NOTIFICATION_RESTORE_ID,
-                        createNotificationBuilder().build());
+                        builder.build());
     }
 
 
@@ -425,6 +455,7 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
                 .setContentTitle(getString(R.string.title_hidden));
         Intent restoreIntent = new Intent(ACTION_RESTORE);
         builder.setOngoing(true);
+        builder.setAutoCancel(false);
         builder.setContentIntent(PendingIntent.getBroadcast(this, 0, restoreIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         return builder;
     }
