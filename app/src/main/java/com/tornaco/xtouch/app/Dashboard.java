@@ -2,7 +2,6 @@ package com.tornaco.xtouch.app;
 
 import com.tornaco.xtouch.R;
 import com.tornaco.xtouch.provider.SettingsProvider;
-import com.tornaco.xtouch.tiles.AdTile;
 import com.tornaco.xtouch.tiles.AlphaTile;
 import com.tornaco.xtouch.tiles.BlurTile;
 import com.tornaco.xtouch.tiles.CropToCircleTile;
@@ -29,7 +28,6 @@ import dev.nick.tiles.tile.Category;
 import dev.nick.tiles.tile.DashboardFragment;
 
 public class Dashboard extends DashboardFragment {
-    private AdTile mAdTile;
 
     @Override
     protected void onCreateDashCategories(List<Category> categories) {
@@ -47,11 +45,6 @@ public class Dashboard extends DashboardFragment {
         settings.addTile(new IMETile(getContext()));
         settings.addTile(new RestoreImeHiddenTile(getContext()));
         settings.addTile(new LockedTile(getContext()));
-
-        Category ad = new Category();
-        ad.titleRes = R.string.title_ad_area;
-        mAdTile = new AdTile(getContext());
-        ad.addTile(mAdTile);
 
         Category view = new Category();
         view.titleRes = R.string.category_view;
@@ -80,7 +73,6 @@ public class Dashboard extends DashboardFragment {
         categories.add(def);
         if (SettingsProvider.get().getBoolean(SettingsProvider.Key.FORCE_SHOW_AD) ||
                 !SettingsProvider.get().shouldSkipAd()) {
-            categories.add(ad);
         }
         categories.add(settings);
         categories.add(key);
@@ -89,13 +81,4 @@ public class Dashboard extends DashboardFragment {
         categories.add(dev);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        try {
-            mAdTile.recycle();
-        } catch (Throwable ignored) {
-
-        }
-    }
 }

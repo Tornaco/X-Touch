@@ -46,10 +46,11 @@ public class MainActivity extends ContainerHostActivity {
         if (!checkSelfPerm(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.GET_TASKS,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                //  Manifest.permission.READ_PHONE_STATE,
+                // Manifest.permission.GET_TASKS
+                //  Manifest.permission.ACCESS_NETWORK_STATE,
+                //  Manifest.permission.ACCESS_WIFI_STATE
         ))
             MainActivityPermissionRequester.onShowFragmentChecked(this);
         else
@@ -75,10 +76,12 @@ public class MainActivity extends ContainerHostActivity {
     @Override
     @RequiresPermission({Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.GET_TASKS,
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.ACCESS_WIFI_STATE})
+//            Manifest.permission.READ_PHONE_STATE,
+//            Manifest.permission.GET_TASKS,
+//            Manifest.permission.ACCESS_NETWORK_STATE,
+//            Manifest.permission.ACCESS_WIFI_STATE
+
+    })
     @RequiresPermission.OnDenied("onPermissionNotGrant")
     protected void onShowFragment() {
         super.onShowFragment();

@@ -9,13 +9,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <!--For AD START-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <!--For AD END-->
-
     <application
         android:name=".app.XTouchApp"
         android:allowBackup="true"
@@ -84,20 +77,6 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/access" />
         </service>
-
-        <!--For AD START-->
-        <activity
-            android:name="com.xiaomi.ad.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:exported="false"
-            android:screenOrientation="behind"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-
-        <activity
-            android:name=".app.VerticalSplashAdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <!--For AD END-->
     </application>
 
 </manifest>

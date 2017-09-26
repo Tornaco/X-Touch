@@ -7,8 +7,8 @@ android {
         applicationId "com.tornaco.xtouch"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 116
-        versionName "1.1.6"
+        versionCode 117
+        versionName "1.1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -60,5 +60,4 @@ dependencies {
     provided 'github.tornaco:permission-requester-annotation:1.1'
     annotationProcessor 'github.tornaco:permission-requester-compiler:1.1'
     compile 'com.github.Tornaco:VanGogh:v0.1-alpha'
-    compile files('libs/AdSdk.jar')
 }

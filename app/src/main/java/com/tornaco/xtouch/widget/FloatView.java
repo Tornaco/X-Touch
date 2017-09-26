@@ -9,6 +9,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -175,6 +176,7 @@ public class FloatView extends FrameLayout {
     }
 
     private void onPostSizeChange() {
+        if (!isAttachedToWindow()) return;
         mLp.width = dp2px(mSize);
         mLp.height = dp2px(mSize);
         mWm.updateViewLayout(this, mLp);
@@ -331,7 +333,11 @@ public class FloatView extends FrameLayout {
         mLp.width = dp2px(mSize);
         mLp.height = dp2px(mSize);
         mLp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        mLp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        mLp.type = Build.VERSION.SDK_INT
+                >= Build.VERSION_CODES.O ?
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        Logger.i("mLp.type: %s", mLp.type);
 
         OnTouchListener touchListener = new OnTouchListener() {
             private float touchX;
@@ -398,7 +404,9 @@ public class FloatView extends FrameLayout {
     }
 
     public void attach() {
+        Logger.i("attach");
         if (getParent() == null) {
+            Logger.i("attach.add %s", mLp);
             mWm.addView(this, mLp);
         }
         mWm.updateViewLayout(this, mLp);

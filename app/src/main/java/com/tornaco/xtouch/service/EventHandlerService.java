@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.hardware.input.InputManager;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -173,8 +174,14 @@ public class EventHandlerService extends AccessibilityService implements FloatVi
 
         mStartSound = mSoundPool.load(this, R.raw.effect, 1);
 
-        if (SettingsCompat.canDrawOverlays(getApplicationContext())) {
-            mFloatView.attach();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                || SettingsCompat.canDrawOverlays(getApplicationContext())) {
+            try {
+                mFloatView.attach();
+            } catch (Throwable e) {
+                Logger.e(e, "Fail attach float view");
+                return;
+            }
         } else {
             Logger.e("Missing draw overlay permission, do not add view.");
         }
